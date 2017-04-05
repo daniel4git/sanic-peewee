@@ -2,14 +2,14 @@
 @Author: Huang Sizhe
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   huangsizhe
-@Last modified time: 01-Apr-2017
+@Last modified by:   Huang Sizhe
+@Last modified time: 05-Apr-2017
 @License: MIT
 @Description:
 """
 __all__=["select","prefetch","scalar","atomic","savepoint","transaction","count",
-"create_object","delete","delete_object","get_object","insert","update",
-"update_object","Peewee","database"]
+"create","delete","get","insert","update",
+"Peewee","database"]
 # 搜索
 from peewee_async import select
 # 数据预取
@@ -25,12 +25,16 @@ from peewee_async import transaction # 事务
 # 结果计数,相当于`.count()`
 from peewee_async import count
 """增删改查"""
-from peewee_async import create_object
-from peewee_async import delete
-from peewee_async import delete_object
-from peewee_async import get_object
+from peewee_async import create_object as create
+from peewee_async import delete_object as delete
+from peewee_async import get_object as get
 from peewee_async import insert
-from peewee_async import update
-from peewee_async import update_object
+from peewee_async import update_object as update
 
-from core import database,Peewee
+from .core import database,Core
+from .mixins import TableHandlerMixin
+
+
+class Peewee(Core,TableHandlerMixin,TransactionhandlerMixin):
+    def __init__(self, db=None):
+        super().__init__(db)

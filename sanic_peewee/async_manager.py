@@ -5,16 +5,18 @@
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
 @Last modified by:   Huang Sizhe
-@Last modified time: 01-Apr-2017
+@Last modified time: 05-Apr-2017
 @License: MIT
 @Description:
 """
+__all__=["AsyncManager"]
+
 from peewee_async import Manager, execute
 from functools import partial
 
 
 class AsyncManager(Manager):
-    """
+    """异步管理
     """
 
     def __init__(self, _model_class, *args, **kwargs):

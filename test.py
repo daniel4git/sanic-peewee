@@ -4,8 +4,8 @@
 @Author: Huang Sizhe <huangsizhe>
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   huangsizhe
-@Last modified time: 01-Apr-2017
+@Last modified by:   Huang Sizhe
+@Last modified time: 05-Apr-2017
 @License: MIT
 @Description:
 """
@@ -27,8 +27,38 @@ class KeyValue(DB.AsyncModel):
     key = peewee.CharField(max_length=40, unique=True)
     text = peewee.TextField(default='')
 
-DB.
 
+
+try:
+    DB.create_tables(["KeyValue"])
+except:
+    print("table Exist")
+
+DB.set_allow_sync(False)
+@app.route('/post/<key>/<value>')
+async def post(request, key, value):
+    """
+    Save get parameters to database
+    """
+    obj = await KeyValue.objects.new(key=key, text=value)
+    return json({'object_id': obj.id})
+
+
+@app.route('/get')
+async def get(request):
+    """
+    Load all objects from database
+    """
+    all_objects = await KeyValue.objects.execute(KeyValue.select())
+    serialized_obj = []
+    for obj in all_objects:
+        serialized_obj.append({
+            'id': obj.id,
+            'key': obj.key,
+            'value': obj.text}
+        )
+
+    return json({'objects': serialized_obj})
 
 @app.route("/")
 async def test(request):
