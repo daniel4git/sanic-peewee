@@ -4,8 +4,8 @@
 @Author: Huang Sizhe
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   Huang Sizhe
-@Last modified time: 05-Apr-2017
+# @Last modified by:
+# @Last modified time: 2017-04-06T00:27:01+08:00
 @License: MIT
 @Description:
 """
@@ -18,12 +18,20 @@ from peewee_async import PostgresqlDatabase, MySQLDatabase,  PooledMySQLDatabase
 from peewee_asyncext import PostgresqlExtDatabase, PooledPostgresqlExtDatabase
 from functools import partial
 
-from async_manager import AsyncManager
+from .async_manager import AsyncManager
 from playhouse.db_url import parse
 
 class Core:
 
     def _database(self,DBURL=None):
+        """dburl:
+        postgresql://user:password@ip:port/dbname
+        mysql://user:passwd@ip:port/dbname
+        mysql+pool://user:passwd@ip:port/dbname?max_connections=20&stale_timeout=300
+        postgresql+pool://user:passwd@ip:port/dbname?max_connections=20&stale_timeout=300
+        postgresqlext://user:passwd@ip:port/dbname
+        postgresqlext+pool://user:passwd@ip:port/dbname?max_connections=20&stale_timeout=300
+        """
         TYPES = {
             "postgresql": PostgresqlDatabase,
             "mysql": MySQLDatabase,
@@ -40,12 +48,15 @@ class Core:
                 raise AttributeError("you need to input a database url")
             else:
                 dbtype = DBURL.split("://")[0]
-                return TYPES.get(dbtype, lambda *as, **ks: _raise())(**parse(DBURL))
+                dbinfo = parse(DBURL)
+                dbinfo["password"] = dbinfo["passwd"]
+                del dbinfo["passwd"]
+                return TYPES.get(dbtype, lambda **ks: _raise())(**dbinfo)
 
 
     def __call__(self, app=None):
         if app:
-            self.init_app(app)
+            return self.init_app(app)
         else:
             raise AttributeError("need a sanic app to init the extension")
 
@@ -62,15 +73,18 @@ class Core:
                 self.db = self._database(app.config.DBURL)
 
         self.AsyncModel = self._get_meta_db_class()
+        print(self.AsyncModel)
+        if "extensions" not in app.__dir__():
+            app.extensions = {}
         app.extensions['SanicPeewee'] = self
         return self
     def _get_meta_db_class(self):
-    """creating a declartive class model for db"""
+        """creating a declartive class model for db"""
         db = self.db
         class _BlockedMeta(BaseModel):
             def __new__(cls, name, bases, attrs):
                 _instance = super(_BlockedMeta, cls).__new__(cls, name, bases, attrs)
-                _instance.async = AsyncManager(_instance,db)
+                _instance.aio = AsyncManager(_instance,db)
                 return _instance
 
         class AsyncBase(Model, metaclass=_BlockedMeta):

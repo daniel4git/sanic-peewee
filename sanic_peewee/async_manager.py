@@ -4,8 +4,8 @@
 @Author: Huang Sizhe
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   Huang Sizhe
-@Last modified time: 05-Apr-2017
+# @Last modified by:
+# @Last modified time: 2017-04-05T22:35:15+08:00
 @License: MIT
 @Description:
 """

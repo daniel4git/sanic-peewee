@@ -1,0 +1,10 @@
+aiofiles>=0.3.1
+aiomysql>=0.0.9
+aiopg>=0.13.0
+httptools>=0.0.9
+peewee>=2.9.1
+peewee-async>=0.5.7
+psycopg2>=2.7.1
+PyMySQL>=0.7.10
+sanic>=0.4.1
+ujson>=1.35

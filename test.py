@@ -4,43 +4,45 @@
 @Author: Huang Sizhe <huangsizhe>
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   Huang Sizhe
-@Last modified time: 05-Apr-2017
+# @Last modified by:
+# @Last modified time: 2017-04-06T00:29:31+08:00
 @License: MIT
 @Description:
 """
 
 from sanic import Sanic
-from sanic.response import text
-from sanic_peewee import Peewee, database
+from sanic.response import text,json
+from sanic_peewee import Peewee,select
+from peewee import CharField, TextField
 
 app = Sanic(__name__)
-db = database(dbtype="mysql",
-              database='test',
-              host='127.0.0.1',
-              user='root',
-              password='hsz881224')
-peewee=Peewee(db)
-DB = peewee(app)
-
-class KeyValue(DB.AsyncModel):
-    key = peewee.CharField(max_length=40, unique=True)
-    text = peewee.TextField(default='')
+dburl = "mysql://{user}:{password}@{host}:{port}/{database}".format(
+    database='test1',
+    port=3306,
+    host='127.0.0.1',
+    user='root',
+    password='hsz881224'
+)
+peewee = Peewee(dburl)
+db = peewee(app)
 
 
+class KeyValue(db.AsyncModel):
+    key = CharField(max_length=40, unique=True)
+    text = TextField(default='')
 
-try:
-    DB.create_tables(["KeyValue"])
-except:
-    print("table Exist")
 
-DB.set_allow_sync(False)
+
+db.create_tables([KeyValue])
+
+
+
 @app.route('/post/<key>/<value>')
 async def post(request, key, value):
     """
     Save get parameters to database
     """
-    obj = await KeyValue.objects.new(key=key, text=value)
+    obj = await KeyValue.aio.create(key=key, text=value)
     return json({'object_id': obj.id})
 
 
@@ -49,7 +51,7 @@ async def get(request):
     """
     Load all objects from database
     """
-    all_objects = await KeyValue.objects.execute(KeyValue.select())
+    all_objects = await db.aio.select(db.SelectQuery(KeyValue))
     serialized_obj = []
     for obj in all_objects:
         serialized_obj.append({
@@ -59,6 +61,7 @@ async def get(request):
         )
 
     return json({'objects': serialized_obj})
+
 
 @app.route("/")
 async def test(request):

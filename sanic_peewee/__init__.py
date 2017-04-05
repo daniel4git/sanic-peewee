@@ -2,14 +2,14 @@
 @Author: Huang Sizhe
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   Huang Sizhe
-@Last modified time: 05-Apr-2017
+# @Last modified by:
+# @Last modified time: 2017-04-05T23:54:44+08:00
 @License: MIT
 @Description:
 """
 __all__=["select","prefetch","scalar","atomic","savepoint","transaction","count",
 "create","delete","get","insert","update",
-"Peewee","database"]
+"Peewee"]
 # 搜索
 from peewee_async import select
 # 数据预取
@@ -31,10 +31,10 @@ from peewee_async import get_object as get
 from peewee_async import insert
 from peewee_async import update_object as update
 
-from .core import database,Core
-from .mixins import TableHandlerMixin
+from .core import Core
+from .mixins import TableHandlerMixin, TransactionHandlerMixin, QueryHandlerMixin
 
 
-class Peewee(Core,TableHandlerMixin,TransactionhandlerMixin):
+class Peewee(Core,TableHandlerMixin,TransactionHandlerMixin,QueryHandlerMixin):
     def __init__(self, db=None):
         super().__init__(db)
