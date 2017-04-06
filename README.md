@@ -10,8 +10,37 @@
 
 
 # sanic-peewee
-sanic-peewee is a async_peewee orm extension for sanic
 
+sanic-peewee is a async_peewee orm extension for sanic,
+I hope users can deal with the database simplely and efectively when using sanic.
+
+
+## Features
+
++ a peewee API similar to peewee's standard, blocking API.
++ support for async/await (PEP 492) constructs
++ use database url (peewee's playhose)
++ support pool and pg's ext (peewee-async)
++ sync api for creating and delecting tables,async api for GRUD data.
+
+
+## Requirements
+
+1. aiomysql>=0.0.9
++ aiopg>=0.13.0
++ peewee>=2.9.1
++ peewee-async>=0.5.7
++ psycopg2>=2.7.1
++ PyMySQL>=0.7.10
++ sanic>=0.4.1
+
+## Installation
+
+    pip install sanic-peewee
+
+
+
+## Example
 
 ```python
 from sanic import Sanic
@@ -46,7 +75,7 @@ async def post(request, key, value):
     """
     Save get parameters to database
     """
-    obj = await KeyValue.aio.create(key=key, text=value)
+    obj = await KeyValue.aio.create(key=key, text=value)# use the model's async object to manage the query
     return json({'object_id': obj.id})
 
 
@@ -55,7 +84,9 @@ async def get(request):
     """
     Load all objects from database
     """
+    # use the sanic_peewee object's async api
     all_objects = await db.aio.select(db.SelectQuery(KeyValue))
+
     serialized_obj = []
     for obj in all_objects:
         serialized_obj.append({
