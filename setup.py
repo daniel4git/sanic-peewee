@@ -110,7 +110,7 @@ long_description = '''# sanic-peewee
     '''
 setup(
     name='sanic-peewee',
-    version='0.0.1',
+    version='0.0.2',
     author='Huang Sizhe',
     author_email='hsz1273327@gmail.com',
     packages=['sanic_peewee'],
