@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sanic_peewee.mixins &#8212; sanic_peewee  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for sanic_peewee.mixins</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">@Author: Huang Sizhe</span>
+<span class="sd">@Date:   05-Apr-2017</span>
+<span class="sd">@Email:  hsz1273327@gmail.com</span>
+<span class="sd">@Last modified by:   Huang Sizhe</span>
+<span class="sd">@Last modified time: 06-Apr-2017</span>
+<span class="sd">@License: MIT</span>
+<span class="sd">@Description:</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;TableHandlerMixin&quot;</span><span class="p">,</span> <span class="s2">&quot;TransactionHandlerMixin&quot;</span><span class="p">,</span> <span class="s2">&quot;QueryHandlerMixin&quot;</span><span class="p">]</span>
+<span class="kn">from</span> <span class="nn">sanic.log</span> <span class="k">import</span> <span class="n">log</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">atomic</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">savepoint</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">transaction</span>
+
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">prefetch</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">scalar</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">count</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">execute</span>
+
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">create_object</span><span class="p">,</span> <span class="n">insert</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">delete_object</span><span class="p">,</span> <span class="n">delete</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">get_object</span><span class="p">,</span> <span class="n">select</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">update_object</span><span class="p">,</span> <span class="n">update</span>
+
+<span class="kn">from</span> <span class="nn">peewee</span> <span class="k">import</span> <span class="n">InternalError</span>
+
+
+<div class="viewcode-block" id="TableHandlerMixin"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.TableHandlerMixin">[docs]</a><span class="k">class</span> <span class="nc">TableHandlerMixin</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;针对表格操作的Mixin.同步阻塞操作</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TableHandlerMixin.create_tables"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.TableHandlerMixin.create_tables">[docs]</a>    <span class="k">def</span> <span class="nf">create_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_classes</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;创建表格,modle中定义的约束也会一并被创建</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            model_classes (list): - model列表,注意类型不是string</span>
+<span class="sd">            log (logging): - python标准库的logging对象,默认使用sanic.log.log</span>
+<span class="sd">            safe (bool): - 默认False,如果为True,已经存在的表格将不会被创建</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">database</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>
+        <span class="n">database</span><span class="o">.</span><span class="n">set_allow_sync</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">database</span><span class="o">.</span><span class="n">create_tables</span><span class="p">(</span><span class="n">model_classes</span><span class="p">,</span> <span class="n">safe</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;created_table&quot;</span><span class="p">)</span>
+            <span class="n">database</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">InternalError</span> <span class="k">as</span> <span class="n">exist</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;table exist&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">e</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">database</span><span class="o">.</span><span class="n">set_allow_sync</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TableHandlerMixin.drop_tables"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.TableHandlerMixin.drop_tables">[docs]</a>    <span class="k">def</span> <span class="nf">drop_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_classes</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cascade</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;删除表格</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            model_classes (list&lt;class&gt;): - model列表,注意类型不是string</span>
+<span class="sd">            log (logging): - python标准库的logging对象,默认使用sanic.log.log</span>
+<span class="sd">            safe (bool): - 默认False,如果为True,则会先校验表格是否存在,然后再进行删除</span>
+<span class="sd">            cascade (bool): - 默认False,选择是否使用串联删除,串联删除是指在表下有对象的情况下连对象一并删除.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">database</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>
+        <span class="n">database</span><span class="o">.</span><span class="n">set_allow_sync</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">database</span><span class="o">.</span><span class="n">drop_tables</span><span class="p">(</span><span class="n">model_classes</span><span class="p">,</span> <span class="n">safe</span><span class="p">,</span> <span class="n">cascade</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;droped_table&quot;</span><span class="p">)</span>
+            <span class="n">database</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">InternalError</span> <span class="k">as</span> <span class="n">exist</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;interinterErrornalError&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">e</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">database</span><span class="o">.</span><span class="n">set_allow_sync</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="TransactionHandlerMixin"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.TransactionHandlerMixin">[docs]</a><span class="k">class</span> <span class="nc">TransactionHandlerMixin</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;异步事务处理&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TransactionHandlerMixin.async_atomic"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.TransactionHandlerMixin.async_atomic">[docs]</a>    <span class="k">def</span> <span class="nf">async_atomic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;原子操作</span>
+
+<span class="sd">        使用:</span>
+<span class="sd">        obj = await TestModel.aio.create(text=&#39;FOO&#39;)</span>
+<span class="sd">        obj_id = obj.id</span>
+<span class="sd">        async with db.async_atomic():</span>
+<span class="sd">            obj.text = &#39;BAR&#39;</span>
+<span class="sd">            await objects.update(obj)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">atomic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TransactionHandlerMixin.async_savepoint"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.TransactionHandlerMixin.async_savepoint">[docs]</a>    <span class="k">def</span> <span class="nf">async_savepoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;savepoint操作,也和async_atomic一样用async with&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">savepoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TransactionHandlerMixin.async_transaction"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.TransactionHandlerMixin.async_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">async_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;事务操作,也和async_atomic一样用async with &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">transaction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="QueryHandlerMixin"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin">[docs]</a><span class="k">class</span> <span class="nc">QueryHandlerMixin</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;异步请求&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="QueryHandlerMixin.aio"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio">[docs]</a>    <span class="k">class</span> <span class="nc">aio</span><span class="p">:</span>
+        <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="QueryHandlerMixin.aio.execute"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio.execute">[docs]</a>        <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">excute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div>
+
+        <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="QueryHandlerMixin.aio.insert"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio.insert">[docs]</a>        <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;query需要是InsertQuery类型或者orm的model类&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">InsertQuery</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">insert</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">create_object</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
+
+        <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="QueryHandlerMixin.aio.select"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio.select">[docs]</a>        <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;query需要是SelectQuery类型&quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">select</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div>
+
+        <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="QueryHandlerMixin.aio.get"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio.get">[docs]</a>        <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;query需要是Query类型或者orm对象&quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">get_object</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+        <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="QueryHandlerMixin.aio.update"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio.update">[docs]</a>        <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">only</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;query需要是UpdateQuery类型或者orm对象&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">UpdateQuery</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">update</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">update_object</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">only</span><span class="o">=</span><span class="n">only</span><span class="p">)</span></div>
+
+        <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="QueryHandlerMixin.aio.delete"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio.delete">[docs]</a>        <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">delete_nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;query需要是DeleteQuery类型或者orm对象&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">DeleteQuery</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">delete</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">delete_object</span><span class="p">(</span><span class="n">query</span><span class="p">,</span>
+                                     <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span>
+                                     <span class="n">delete_nullable</span><span class="o">=</span><span class="n">delete_nullable</span><span class="p">)</span></div>
+
+        <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="QueryHandlerMixin.aio.prefetch"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio.prefetch">[docs]</a>        <span class="k">def</span> <span class="nf">prefetch</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="o">*</span><span class="n">subqueries</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;预处理&quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">prefetch</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="o">*</span><span class="n">subqueries</span><span class="p">)</span></div>
+
+        <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="QueryHandlerMixin.aio.scalar"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio.scalar">[docs]</a>        <span class="k">def</span> <span class="nf">scalar</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">as_tuple</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Scalar 函数&quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">scalar</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">as_tuple</span><span class="o">=</span><span class="n">as_tuple</span><span class="p">)</span></div>
+
+        <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="QueryHandlerMixin.aio.count"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio.count">[docs]</a>        <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">clear_limit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;数个数&quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">count</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">clear_limit</span><span class="o">=</span><span class="n">clear_limit</span><span class="p">)</span></div></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../sanic_peewee.html">sanic_peewee</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, hsz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

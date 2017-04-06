@@ -1,3 +1,17 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+"""
+@Author: Huang Sizhe
+@Date:   06-Apr-2017
+@Email:  hsz1273327@gmail.com
+@Last modified by:   Huang Sizhe
+@Last modified time: 06-Apr-2017
+@License: MIT
+@Description:
+"""
+
+
+
 from distutils.core import setup
 
 required = ['aiofiles>=0.3.1',

@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sanic_peewee &#8212; sanic_peewee  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for sanic_peewee</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">@Author: Huang Sizhe</span>
+<span class="sd">@Date:   01-Apr-2017</span>
+<span class="sd">@Email:  hsz1273327@gmail.com</span>
+<span class="sd">@License: MIT</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;select&quot;</span><span class="p">,</span> <span class="s2">&quot;prefetch&quot;</span><span class="p">,</span> <span class="s2">&quot;scalar&quot;</span><span class="p">,</span> <span class="s2">&quot;atomic&quot;</span><span class="p">,</span> <span class="s2">&quot;savepoint&quot;</span><span class="p">,</span> <span class="s2">&quot;transaction&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;insert&quot;</span><span class="p">,</span> <span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="s2">&quot;Peewee&quot;</span><span class="p">]</span>
+
+<span class="c1"># 搜索</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">select</span>
+<span class="c1"># 数据预取</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">prefetch</span>
+<span class="c1"># 相当于select(),但数据为一个整体</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">scalar</span>
+<span class="sd">&quot;&quot;&quot;事务操作,配合`async with`使用</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">atomic</span>  <span class="c1"># 原子操作</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">savepoint</span>  <span class="c1"># 保存点</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">transaction</span>  <span class="c1"># 事务</span>
+
+<span class="c1"># 结果计数,相当于`.count()`</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">count</span>
+<span class="sd">&quot;&quot;&quot;增删改查&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">create_object</span> <span class="k">as</span> <span class="n">create</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">delete_object</span> <span class="k">as</span> <span class="n">delete</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">get_object</span> <span class="k">as</span> <span class="n">get</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">insert</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">update_object</span> <span class="k">as</span> <span class="n">update</span>
+
+<span class="kn">from</span> <span class="nn">sanic_peewee.core</span> <span class="k">import</span> <span class="n">Core</span>
+<span class="kn">from</span> <span class="nn">sanic_peewee.mixins</span> <span class="k">import</span> <span class="n">TableHandlerMixin</span><span class="p">,</span> <span class="n">TransactionHandlerMixin</span><span class="p">,</span> <span class="n">QueryHandlerMixin</span>
+
+<span class="kn">from</span> <span class="nn">peewee</span> <span class="k">import</span> <span class="n">SelectQuery</span><span class="p">,</span> <span class="n">UpdateQuery</span><span class="p">,</span> <span class="n">InsertQuery</span><span class="p">,</span> <span class="n">DeleteQuery</span>
+
+
+<div class="viewcode-block" id="Peewee"><a class="viewcode-back" href="../sanic_peewee.html#sanic_peewee.Peewee">[docs]</a><span class="k">class</span> <span class="nc">Peewee</span><span class="p">(</span><span class="n">Core</span><span class="p">,</span> <span class="n">TableHandlerMixin</span><span class="p">,</span> <span class="n">TransactionHandlerMixin</span><span class="p">,</span> <span class="n">QueryHandlerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        db (db): - 数据库原始的连接</span>
+<span class="sd">        AsyncModel (class): - 用于创建model的父类</span>
+<span class="sd">        aio (class): - 用于封装数据操作的命名空间</span>
+<span class="sd">        SelectQuery (peewee.SelectQuery) : - 用户select的请求</span>
+<span class="sd">        UpdateQuery (peewee.UpdateQuery) : - 用于update的请求</span>
+<span class="sd">        InsertQuery (peewee.InsertQuery) : - 用于插入数据的请求</span>
+<span class="sd">        DeleteQuery (peewee.DeleteQuery) : - 用于删除数据的请求</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SelectQuery</span> <span class="o">=</span> <span class="n">SelectQuery</span>
+    <span class="n">UpdateQuery</span> <span class="o">=</span> <span class="n">UpdateQuery</span>
+    <span class="n">InsertQuery</span> <span class="o">=</span> <span class="n">InsertQuery</span>
+    <span class="n">DeleteQuery</span> <span class="o">=</span> <span class="n">DeleteQuery</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">db</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, hsz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

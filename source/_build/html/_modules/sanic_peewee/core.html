@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sanic_peewee.core &#8212; sanic_peewee  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for sanic_peewee.core</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">@Author: Huang Sizhe</span>
+<span class="sd">@Date:   01-Apr-2017</span>
+<span class="sd">@Email:  hsz1273327@gmail.com</span>
+<span class="sd">@Last modified by:   Huang Sizhe</span>
+<span class="sd">@Last modified time: 06-Apr-2017</span>
+<span class="sd">@License: MIT</span>
+<span class="sd">@Description:</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Core&quot;</span><span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">peewee</span>
+<span class="kn">from</span> <span class="nn">peewee</span> <span class="k">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">Manager</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">PostgresqlDatabase</span><span class="p">,</span> <span class="n">MySQLDatabase</span><span class="p">,</span>  <span class="n">PooledMySQLDatabase</span><span class="p">,</span> <span class="n">PooledPostgresqlDatabase</span>
+<span class="kn">from</span> <span class="nn">peewee_asyncext</span> <span class="k">import</span> <span class="n">PostgresqlExtDatabase</span><span class="p">,</span> <span class="n">PooledPostgresqlExtDatabase</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+
+<span class="kn">from</span> <span class="nn">sanic_peewee.async_manager</span> <span class="k">import</span> <span class="n">AsyncManager</span>
+<span class="kn">from</span> <span class="nn">playhouse.db_url</span> <span class="k">import</span> <span class="n">parse</span>
+
+
+<div class="viewcode-block" id="Core"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.core.Core">[docs]</a><span class="k">class</span> <span class="nc">Core</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;核心类,作为Peewee的父类,主要是管数据库连接,与sainc对象绑定,以及生成model父类</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">DBURL</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        _database用于创建数据库的async连接</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        DBURL (str): - batabase url</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            object: - 不同数据库连接的对象</span>
+
+
+
+<span class="sd">        dburl例子如下:</span>
+<span class="sd">        postgresql://user:password@ip:port/dbname</span>
+<span class="sd">        mysql://user:passwd@ip:port/dbname</span>
+<span class="sd">        mysql+pool://user:passwd@ip:port/dbname?max_connections=20&amp;stale_timeout=300</span>
+<span class="sd">        postgresql+pool://user:passwd@ip:port/dbname?max_connections=20&amp;stale_timeout=300</span>
+<span class="sd">        postgresqlext://user:passwd@ip:port/dbname</span>
+<span class="sd">        postgresqlext+pool://user:passwd@ip:port/dbname?max_connections=20&amp;stale_timeout=300</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">TYPES</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;postgresql&quot;</span><span class="p">:</span> <span class="n">PostgresqlDatabase</span><span class="p">,</span>
+            <span class="s2">&quot;mysql&quot;</span><span class="p">:</span> <span class="n">MySQLDatabase</span><span class="p">,</span>
+            <span class="s2">&quot;postgresql+pool&quot;</span><span class="p">:</span> <span class="n">PooledPostgresqlDatabase</span><span class="p">,</span>
+            <span class="s2">&quot;mysql+pool&quot;</span><span class="p">:</span> <span class="n">PooledMySQLDatabase</span><span class="p">,</span>
+            <span class="s2">&quot;postgresqlext&quot;</span><span class="p">:</span> <span class="n">PostgresqlDatabase</span><span class="p">,</span>
+            <span class="s2">&quot;postgresqlext+pool&quot;</span><span class="p">:</span> <span class="n">PooledPostgresqlExtDatabase</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">def</span> <span class="nf">_raise</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;unknow db type&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">DBURL</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">DBURL</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;://&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;you need to input a database url&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dbtype</span> <span class="o">=</span> <span class="n">DBURL</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;://&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">dbinfo</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">DBURL</span><span class="p">)</span>
+                <span class="n">dbinfo</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dbinfo</span><span class="p">[</span><span class="s2">&quot;passwd&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">dbinfo</span><span class="p">[</span><span class="s2">&quot;passwd&quot;</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">TYPES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dbtype</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">**</span><span class="n">ks</span><span class="p">:</span> <span class="n">_raise</span><span class="p">())(</span><span class="o">**</span><span class="n">dbinfo</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">app</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;need a sanic app to init the extension&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">DBURL</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;根据参数选择生成db,参数为dburl的形式</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">DBURL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_database</span><span class="p">(</span><span class="n">DBURL</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Core.init_app"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.core.Core.init_app">[docs]</a>    <span class="k">def</span> <span class="nf">init_app</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;绑定app</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">DBURL</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_database</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">DBURL</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">AsyncModel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_meta_db_class</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AsyncModel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;extensions&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">():</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">extensions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">extensions</span><span class="p">[</span><span class="s1">&#39;SanicPeewee&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_meta_db_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;creating a declartive class model for db&quot;&quot;&quot;</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>
+
+        <span class="k">class</span> <span class="nc">_BlockedMeta</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+                <span class="n">_instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">_BlockedMeta</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span>
+                    <span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+                <span class="n">_instance</span><span class="o">.</span><span class="n">aio</span> <span class="o">=</span> <span class="n">AsyncManager</span><span class="p">(</span><span class="n">_instance</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">_instance</span>
+
+        <span class="k">class</span> <span class="nc">AsyncBase</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">_BlockedMeta</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
+
+            <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+                <span class="n">database</span> <span class="o">=</span> <span class="n">db</span>
+
+        <span class="k">return</span> <span class="n">AsyncBase</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../sanic_peewee.html">sanic_peewee</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, hsz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

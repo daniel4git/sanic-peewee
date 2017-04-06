@@ -12,7 +12,7 @@
 sanic-peewee
 ============
 
-sanic-peewee is a async\_peewee orm extension for sanic
+sanic-peewee is a asyncpeewee orm extension for sanic
 
 .. code:: python
 

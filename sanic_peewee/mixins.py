@@ -27,14 +27,16 @@ from peewee_async import update_object, update
 
 from peewee import InternalError
 
+
 class TableHandlerMixin:
     """针对表格操作的Mixin.同步阻塞操作
     """
 
     def create_tables(self, model_classes, log=log, safe=False):
         """创建表格,modle中定义的约束也会一并被创建
+
         Parameters:
-            model_classes (list<class>): - model列表,注意类型不是string
+            model_classes (list): - model列表,注意类型不是string
             log (logging): - python标准库的logging对象,默认使用sanic.log.log
             safe (bool): - 默认False,如果为True,已经存在的表格将不会被创建
         """
@@ -52,7 +54,8 @@ class TableHandlerMixin:
             database.set_allow_sync(False)
 
     def drop_tables(self, model_classes, log=log, safe=False, cascade=False):
-        """删除表格,
+        """删除表格
+
         Parameters:
             model_classes (list<class>): - model列表,注意类型不是string
             log (logging): - python标准库的logging对象,默认使用sanic.log.log
@@ -74,29 +77,26 @@ class TableHandlerMixin:
 
 
 class TransactionHandlerMixin:
-    """异步事务处理
-    """
+    """异步事务处理"""
 
     def async_atomic(self):
         """原子操作
+
         使用:
-        async with db.async_atomic:
-        .....
+        obj = await TestModel.aio.create(text='FOO')
+        obj_id = obj.id
+        async with db.async_atomic():
+            obj.text = 'BAR'
+            await objects.update(obj)
         """
         return atomic(self.db)
 
     def async_savepoint(self):
-        """savepoint操作
-        使用:
-        async with db.async_savepoint:
-        """
+        """savepoint操作,也和async_atomic一样用async with"""
         return savepoint(self.db)
 
     def async_transaction(self):
-        """事务操作
-        使用:
-        async with db.async_transaction:
-        """
+        """事务操作,也和async_atomic一样用async with """
         return transaction(self.db)
 
 
@@ -146,18 +146,15 @@ class QueryHandlerMixin:
 
         @staticmethod
         def prefetch(query, *subqueries):
-            """预处理
-            """
+            """预处理"""
             return prefetch(query, *subqueries)
 
         @staticmethod
         def scalar(query, as_tuple=False):
-            """Scalar 函数
-            """
+            """Scalar 函数"""
             return scalar(query, as_tuple=as_tuple)
 
         @staticmethod
         def count(query, clear_limit=False):
-            """数个数
-            """
+            """数个数"""
             return count(query, clear_limit=clear_limit)

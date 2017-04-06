@@ -1,0 +1,995 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sanic_peewee package &#8212; sanic_peewee  documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="事务操作" href="transaction.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sanic-peewee-package">
+<h1>sanic_peewee package<a class="headerlink" href="#sanic-peewee-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-sanic_peewee.async_manager">
+<span id="sanic-peewee-async-manager-module"></span><h2>sanic_peewee.async_manager module<a class="headerlink" href="#module-sanic_peewee.async_manager" title="Permalink to this headline">¶</a></h2>
+<p>&#64;Author: Huang Sizhe
+&#64;Date:   01-Apr-2017
+&#64;Email:  <a class="reference external" href="mailto:hsz1273327&#37;&#52;&#48;gmail&#46;com">hsz1273327<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;Last modified by:   Huang Sizhe
+&#64;Last modified time: 06-Apr-2017
+&#64;License: MIT
+&#64;Description:</p>
+<dl class="class">
+<dt id="sanic_peewee.async_manager.AsyncManager">
+<em class="property">class </em><code class="descclassname">sanic_peewee.async_manager.</code><code class="descname">AsyncManager</code><span class="sig-paren">(</span><em>_model_class</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/async_manager.html#AsyncManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.async_manager.AsyncManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">peewee_async.Manager</span></code></p>
+<p>继承自peewee_async的异步管理工具,此处用来构造model父类所携带的aio对象</p>
+<p>async manager from peewee_async.Manager.here we use it in constructing the aio object in model&#8217;s partent class</p>
+<dl class="method">
+<dt id="sanic_peewee.async_manager.AsyncManager.create">
+<code class="descname">create</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/async_manager.html#AsyncManager.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.async_manager.AsyncManager.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new object saved to database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>args</strong> (<em>list</em>) &#8211; <ul>
+<li>用来创建数据的参数</li>
+</ul>
+</li>
+<li><strong>kwargs</strong> (<em>dict</em>) &#8211; <ul>
+<li>用来创建数据的参数</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
+<li>将方法对应偏函数运行,结果看所运行的函数结果是什么</li>
+</ul>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">object</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>await &lt;Class&gt;.aio.create(*args,**kwargs)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.async_manager.AsyncManager.create_or_get">
+<code class="descname">create_or_get</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/async_manager.html#AsyncManager.create_or_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.async_manager.AsyncManager.create_or_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try to create new object with specified data. If object already
+exists, then try to get it by unique fields.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kwargs</strong> (<em>dict</em>) &#8211; <ul class="simple">
+<li>创建或者获取对象所用到的字段</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li>将方法对应偏函数运行,结果看所运行的函数结果是什么</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.async_manager.AsyncManager.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/async_manager.html#AsyncManager.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.async_manager.AsyncManager.execute" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<em>peewee.Query</em>) &#8211; <ul class="simple">
+<li>要执行的请求</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li>将方法对应偏函数运行,结果看所运行的请求结果是什么</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.async_manager.AsyncManager.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/async_manager.html#AsyncManager.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.async_manager.AsyncManager.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the model instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>args</strong> (<em>list</em>) &#8211; <ul>
+<li>用来标识要get的数据的参数</li>
+</ul>
+</li>
+<li><strong>kwargs</strong> (<em>dict</em>) &#8211; <ul>
+<li>用来标识要get的数据的参数</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
+<li>获取的对应object</li>
+</ul>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">object</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<dl class="docutils">
+<dt>async def my_async_func():</dt>
+<dd>obj1 = await &lt;Class&gt;.aio.get(MyModel, id=1)
+obj2 = await &lt;Class&gt;.aio.get(MyModel, MyModel.id == 1)
+obj3 = await &lt;Class&gt;.aio.get(MyModel.select().where(MyModel.id == 1))</dd>
+</dl>
+<p>All will return MyModel instance with id = 1</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.async_manager.AsyncManager.get_or_create">
+<code class="descname">get_or_create</code><span class="sig-paren">(</span><em>defaults=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/async_manager.html#AsyncManager.get_or_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.async_manager.AsyncManager.get_or_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try to get an object or create it with the specified defaults.
+Return 2-tuple containing the model instance and a boolean
+indicating whether the instance was created.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>defaults</strong> (<em>dict</em>) &#8211; <ul class="simple">
+<li>默认创建的对象参数</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li>将方法对应偏函数运行,结果看所运行的函数结果是什么</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sanic_peewee.core">
+<span id="sanic-peewee-core-module"></span><h2>sanic_peewee.core module<a class="headerlink" href="#module-sanic_peewee.core" title="Permalink to this headline">¶</a></h2>
+<p>&#64;Author: Huang Sizhe
+&#64;Date:   01-Apr-2017
+&#64;Email:  <a class="reference external" href="mailto:hsz1273327&#37;&#52;&#48;gmail&#46;com">hsz1273327<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;Last modified by:   Huang Sizhe
+&#64;Last modified time: 06-Apr-2017
+&#64;License: MIT
+&#64;Description:</p>
+<dl class="class">
+<dt id="sanic_peewee.core.Core">
+<em class="property">class </em><code class="descclassname">sanic_peewee.core.</code><code class="descname">Core</code><span class="sig-paren">(</span><em>DBURL=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/core.html#Core"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.core.Core" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>核心类,作为Peewee的父类,主要是管数据库连接,与sainc对象绑定,以及生成model父类</p>
+<dl class="method">
+<dt id="sanic_peewee.core.Core.init_app">
+<code class="descname">init_app</code><span class="sig-paren">(</span><em>app</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/core.html#Core.init_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.core.Core.init_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>绑定app</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sanic_peewee.mixins">
+<span id="sanic-peewee-mixins-module"></span><h2>sanic_peewee.mixins module<a class="headerlink" href="#module-sanic_peewee.mixins" title="Permalink to this headline">¶</a></h2>
+<p>&#64;Author: Huang Sizhe
+&#64;Date:   05-Apr-2017
+&#64;Email:  <a class="reference external" href="mailto:hsz1273327&#37;&#52;&#48;gmail&#46;com">hsz1273327<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;Last modified by:   Huang Sizhe
+&#64;Last modified time: 06-Apr-2017
+&#64;License: MIT
+&#64;Description:</p>
+<dl class="class">
+<dt id="sanic_peewee.mixins.TableHandlerMixin">
+<em class="property">class </em><code class="descclassname">sanic_peewee.mixins.</code><code class="descname">TableHandlerMixin</code><a class="reference internal" href="_modules/sanic_peewee/mixins.html#TableHandlerMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.TableHandlerMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>针对表格操作的Mixin.同步阻塞操作</p>
+<dl class="method">
+<dt id="sanic_peewee.mixins.TableHandlerMixin.create_tables">
+<code class="descname">create_tables</code><span class="sig-paren">(</span><em>model_classes</em>, <em>log=&lt;Logger sanic (WARNING)&gt;</em>, <em>safe=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#TableHandlerMixin.create_tables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.TableHandlerMixin.create_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>创建表格,modle中定义的约束也会一并被创建</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>model_classes</strong> (<em>list</em>) &#8211; <ul>
+<li>model列表,注意类型不是string</li>
+</ul>
+</li>
+<li><strong>log</strong> (<em>logging</em>) &#8211; <ul>
+<li>python标准库的logging对象,默认使用sanic.log.log</li>
+</ul>
+</li>
+<li><strong>safe</strong> (<em>bool</em>) &#8211; <ul>
+<li>默认False,如果为True,已经存在的表格将不会被创建</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.mixins.TableHandlerMixin.drop_tables">
+<code class="descname">drop_tables</code><span class="sig-paren">(</span><em>model_classes</em>, <em>log=&lt;Logger sanic (WARNING)&gt;</em>, <em>safe=False</em>, <em>cascade=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#TableHandlerMixin.drop_tables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.TableHandlerMixin.drop_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>删除表格</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>model_classes</strong> (<em>list&lt;class&gt;</em>) &#8211; <ul>
+<li>model列表,注意类型不是string</li>
+</ul>
+</li>
+<li><strong>log</strong> (<em>logging</em>) &#8211; <ul>
+<li>python标准库的logging对象,默认使用sanic.log.log</li>
+</ul>
+</li>
+<li><strong>safe</strong> (<em>bool</em>) &#8211; <ul>
+<li>默认False,如果为True,则会先校验表格是否存在,然后再进行删除</li>
+</ul>
+</li>
+<li><strong>cascade</strong> (<em>bool</em>) &#8211; <ul>
+<li>默认False,选择是否使用串联删除,串联删除是指在表下有对象的情况下连对象一并删除.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sanic_peewee.mixins.TransactionHandlerMixin">
+<em class="property">class </em><code class="descclassname">sanic_peewee.mixins.</code><code class="descname">TransactionHandlerMixin</code><a class="reference internal" href="_modules/sanic_peewee/mixins.html#TransactionHandlerMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.TransactionHandlerMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>异步事务处理</p>
+<dl class="method">
+<dt id="sanic_peewee.mixins.TransactionHandlerMixin.async_atomic">
+<code class="descname">async_atomic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#TransactionHandlerMixin.async_atomic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.TransactionHandlerMixin.async_atomic" title="Permalink to this definition">¶</a></dt>
+<dd><p>原子操作</p>
+<p>使用:
+obj = await TestModel.aio.create(text=&#8217;FOO&#8217;)
+obj_id = obj.id
+async with db.async_atomic():</p>
+<blockquote>
+<div>obj.text = &#8216;BAR&#8217;
+await objects.update(obj)</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.mixins.TransactionHandlerMixin.async_savepoint">
+<code class="descname">async_savepoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#TransactionHandlerMixin.async_savepoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.TransactionHandlerMixin.async_savepoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>savepoint操作,也和async_atomic一样用async with</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.mixins.TransactionHandlerMixin.async_transaction">
+<code class="descname">async_transaction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#TransactionHandlerMixin.async_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.TransactionHandlerMixin.async_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>事务操作,也和async_atomic一样用async with</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sanic_peewee.mixins.QueryHandlerMixin">
+<em class="property">class </em><code class="descclassname">sanic_peewee.mixins.</code><code class="descname">QueryHandlerMixin</code><a class="reference internal" href="_modules/sanic_peewee/mixins.html#QueryHandlerMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.QueryHandlerMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>异步请求</p>
+<dl class="class">
+<dt id="sanic_peewee.mixins.QueryHandlerMixin.aio">
+<em class="property">class </em><code class="descname">aio</code><a class="reference internal" href="_modules/sanic_peewee/mixins.html#QueryHandlerMixin.aio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.QueryHandlerMixin.aio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="sanic_peewee.mixins.QueryHandlerMixin.aio.count">
+<em class="property">static </em><code class="descname">count</code><span class="sig-paren">(</span><em>query</em>, <em>clear_limit=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#QueryHandlerMixin.aio.count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.QueryHandlerMixin.aio.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>数个数</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sanic_peewee.mixins.QueryHandlerMixin.aio.delete">
+<em class="property">static </em><code class="descname">delete</code><span class="sig-paren">(</span><em>query</em>, <em>recursive=False</em>, <em>delete_nullable=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#QueryHandlerMixin.aio.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.QueryHandlerMixin.aio.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>query需要是DeleteQuery类型或者orm对象</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sanic_peewee.mixins.QueryHandlerMixin.aio.execute">
+<em class="property">static </em><code class="descname">execute</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#QueryHandlerMixin.aio.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.QueryHandlerMixin.aio.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="sanic_peewee.mixins.QueryHandlerMixin.aio.get">
+<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><em>query</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#QueryHandlerMixin.aio.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.QueryHandlerMixin.aio.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>query需要是Query类型或者orm对象</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sanic_peewee.mixins.QueryHandlerMixin.aio.insert">
+<em class="property">static </em><code class="descname">insert</code><span class="sig-paren">(</span><em>query</em>, <em>**data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#QueryHandlerMixin.aio.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.QueryHandlerMixin.aio.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>query需要是InsertQuery类型或者orm的model类</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sanic_peewee.mixins.QueryHandlerMixin.aio.prefetch">
+<em class="property">static </em><code class="descname">prefetch</code><span class="sig-paren">(</span><em>query</em>, <em>*subqueries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#QueryHandlerMixin.aio.prefetch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.QueryHandlerMixin.aio.prefetch" title="Permalink to this definition">¶</a></dt>
+<dd><p>预处理</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sanic_peewee.mixins.QueryHandlerMixin.aio.scalar">
+<em class="property">static </em><code class="descname">scalar</code><span class="sig-paren">(</span><em>query</em>, <em>as_tuple=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#QueryHandlerMixin.aio.scalar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.QueryHandlerMixin.aio.scalar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scalar 函数</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sanic_peewee.mixins.QueryHandlerMixin.aio.select">
+<em class="property">static </em><code class="descname">select</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#QueryHandlerMixin.aio.select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.QueryHandlerMixin.aio.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>query需要是SelectQuery类型</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="sanic_peewee.mixins.QueryHandlerMixin.aio.update">
+<em class="property">static </em><code class="descname">update</code><span class="sig-paren">(</span><em>query</em>, <em>only=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#QueryHandlerMixin.aio.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.QueryHandlerMixin.aio.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>query需要是UpdateQuery类型或者orm对象</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sanic_peewee">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sanic_peewee" title="Permalink to this headline">¶</a></h2>
+<p>&#64;Author: Huang Sizhe
+&#64;Date:   01-Apr-2017
+&#64;Email:  <a class="reference external" href="mailto:hsz1273327&#37;&#52;&#48;gmail&#46;com">hsz1273327<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;License: MIT</p>
+<dl class="function">
+<dt id="sanic_peewee.select">
+<code class="descclassname">sanic_peewee.</code><code class="descname">select</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform SELECT query asynchronously.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sanic_peewee.prefetch">
+<code class="descclassname">sanic_peewee.</code><code class="descname">prefetch</code><span class="sig-paren">(</span><em>query</em>, <em>*subqueries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#prefetch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.prefetch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronous version of the <cite>prefetch()</cite> from peewee.</p>
+<p>Returns Query that has already cached data.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sanic_peewee.scalar">
+<code class="descclassname">sanic_peewee.</code><code class="descname">scalar</code><span class="sig-paren">(</span><em>query</em>, <em>as_tuple=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#scalar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.scalar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get single value from <code class="docutils literal"><span class="pre">select()</span></code> query, i.e. for aggregation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">result is the same as after sync <code class="docutils literal"><span class="pre">query.scalar()</span></code> call</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="sanic_peewee.atomic">
+<em class="property">class </em><code class="descclassname">sanic_peewee.</code><code class="descname">atomic</code><span class="sig-paren">(</span><em>db</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#atomic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.atomic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Asynchronous context manager (<cite>async with</cite>), similar to
+<cite>peewee.atomic()</cite>.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="sanic_peewee.savepoint">
+<em class="property">class </em><code class="descclassname">sanic_peewee.</code><code class="descname">savepoint</code><span class="sig-paren">(</span><em>db</em>, <em>sid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#savepoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.savepoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Asynchronous context manager (<cite>async with</cite>), similar to
+<cite>peewee.savepoint()</cite>.</p>
+<dl class="method">
+<dt id="sanic_peewee.savepoint.commit">
+<code class="descname">commit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#savepoint.commit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.savepoint.commit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.savepoint.rollback">
+<code class="descname">rollback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#savepoint.rollback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.savepoint.rollback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sanic_peewee.transaction">
+<em class="property">class </em><code class="descclassname">sanic_peewee.</code><code class="descname">transaction</code><span class="sig-paren">(</span><em>db</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Asynchronous context manager (<cite>async with</cite>), similar to
+<cite>peewee.transaction()</cite>. Will start new <cite>asyncio</cite> task for
+transaction if not started already.</p>
+<dl class="method">
+<dt id="sanic_peewee.transaction.commit">
+<code class="descname">commit</code><span class="sig-paren">(</span><em>begin=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#transaction.commit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.transaction.commit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.transaction.rollback">
+<code class="descname">rollback</code><span class="sig-paren">(</span><em>begin=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#transaction.rollback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.transaction.rollback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="sanic_peewee.count">
+<code class="descclassname">sanic_peewee.</code><code class="descname">count</code><span class="sig-paren">(</span><em>query</em>, <em>clear_limit=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform <em>COUNT</em> aggregated query asynchronously.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">number of objects in <code class="docutils literal"><span class="pre">select()</span></code> query</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sanic_peewee.create">
+<code class="descclassname">sanic_peewee.</code><code class="descname">create</code><span class="sig-paren">(</span><em>model</em>, <em>**data</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create object asynchronously.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> &#8211; mode class</li>
+<li><strong>data</strong> &#8211; data for initializing object</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">new object saved to database</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sanic_peewee.delete">
+<code class="descclassname">sanic_peewee.</code><code class="descname">delete</code><span class="sig-paren">(</span><em>obj</em>, <em>recursive=False</em>, <em>delete_nullable=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete object asynchronously.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> &#8211; object to delete</li>
+<li><strong>recursive</strong> &#8211; if <code class="docutils literal"><span class="pre">True</span></code> also delete all other objects depends on object</li>
+<li><strong>delete_nullable</strong> &#8211; if <cite>True</cite> and delete is recursive then delete even &#8216;nullable&#8217; dependencies</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>For details please check out <a class="reference external" href="http://peewee.readthedocs.io/en/latest/peewee/api.html#Model.delete_instance">Model.delete_instance()</a> in peewee docs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sanic_peewee.get">
+<code class="descclassname">sanic_peewee.</code><code class="descname">get</code><span class="sig-paren">(</span><em>source</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get object asynchronously.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>source</strong> &#8211; mode class or query to get object from</li>
+<li><strong>args</strong> &#8211; lookup parameters</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">model instance or raises <code class="docutils literal"><span class="pre">peewee.DoesNotExist</span></code> if object not found</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sanic_peewee.insert">
+<code class="descclassname">sanic_peewee.</code><code class="descname">insert</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform INSERT query asynchronously. Returns last insert ID.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sanic_peewee.update">
+<code class="descclassname">sanic_peewee.</code><code class="descname">update</code><span class="sig-paren">(</span><em>obj</em>, <em>only=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/peewee_async.html#update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update object asynchronously.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> &#8211; object to update</li>
+<li><strong>only</strong> &#8211; list or tuple of fields to updata, is <cite>None</cite> then all fields updated</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This function does the same as <a class="reference external" href="http://peewee.readthedocs.io/en/latest/peewee/api.html#Model.save">Model.save()</a> for already saved object, but it
+doesn&#8217;t invoke <code class="docutils literal"><span class="pre">save()</span></code> method on model class. That is important to know if you
+overrided save method for your model.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="sanic_peewee.Peewee">
+<em class="property">class </em><code class="descclassname">sanic_peewee.</code><code class="descname">Peewee</code><span class="sig-paren">(</span><em>db=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee.html#Peewee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.Peewee" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sanic_peewee.core.Core" title="sanic_peewee.core.Core"><code class="xref py py-class docutils literal"><span class="pre">sanic_peewee.core.Core</span></code></a>, <a class="reference internal" href="#sanic_peewee.mixins.TableHandlerMixin" title="sanic_peewee.mixins.TableHandlerMixin"><code class="xref py py-class docutils literal"><span class="pre">sanic_peewee.mixins.TableHandlerMixin</span></code></a>, <a class="reference internal" href="#sanic_peewee.mixins.TransactionHandlerMixin" title="sanic_peewee.mixins.TransactionHandlerMixin"><code class="xref py py-class docutils literal"><span class="pre">sanic_peewee.mixins.TransactionHandlerMixin</span></code></a>, <a class="reference internal" href="#sanic_peewee.mixins.QueryHandlerMixin" title="sanic_peewee.mixins.QueryHandlerMixin"><code class="xref py py-class docutils literal"><span class="pre">sanic_peewee.mixins.QueryHandlerMixin</span></code></a></p>
+<dl class="attribute">
+<dt id="sanic_peewee.Peewee.db">
+<code class="descname">db</code><a class="headerlink" href="#sanic_peewee.Peewee.db" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>db</em> &#8211;</p>
+<ul class="simple">
+<li>数据库原始的连接</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sanic_peewee.Peewee.AsyncModel">
+<code class="descname">AsyncModel</code><a class="headerlink" href="#sanic_peewee.Peewee.AsyncModel" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>class</em> &#8211;</p>
+<ul class="simple">
+<li>用于创建model的父类</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sanic_peewee.Peewee.aio">
+<code class="descname">aio</code><a class="headerlink" href="#sanic_peewee.Peewee.aio" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>class</em> &#8211;</p>
+<ul class="simple">
+<li>用于封装数据操作的命名空间</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sanic_peewee.Peewee.SelectQuery">
+<code class="descname">SelectQuery</code><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>peewee.SelectQuery</em> &#8211;</p>
+<ul class="simple">
+<li>用户select的请求</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sanic_peewee.Peewee.UpdateQuery">
+<code class="descname">UpdateQuery</code><a class="headerlink" href="#sanic_peewee.Peewee.UpdateQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>peewee.UpdateQuery</em> &#8211;</p>
+<ul class="simple">
+<li>用于update的请求</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sanic_peewee.Peewee.InsertQuery">
+<code class="descname">InsertQuery</code><a class="headerlink" href="#sanic_peewee.Peewee.InsertQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>peewee.InsertQuery</em> &#8211;</p>
+<ul class="simple">
+<li>用于插入数据的请求</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sanic_peewee.Peewee.DeleteQuery">
+<code class="descname">DeleteQuery</code><a class="headerlink" href="#sanic_peewee.Peewee.DeleteQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>peewee.DeleteQuery</em> &#8211;</p>
+<ul class="simple">
+<li>用于删除数据的请求</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descname">DeleteQuery</code><span class="sig-paren">(</span><em>model_class</em><span class="sig-paren">)</span></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">peewee._WriteQuery</span></code></p>
+<dl class="method">
+<dt id="sanic_peewee.Peewee.DeleteQuery.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.DeleteQuery.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.DeleteQuery.join">
+<code class="descname">join</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.DeleteQuery.join" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.DeleteQuery.sql">
+<code class="descname">sql</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.DeleteQuery.sql" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descname">InsertQuery</code><span class="sig-paren">(</span><em>model_class</em>, <em>field_dict=None</em>, <em>rows=None</em>, <em>fields=None</em>, <em>query=None</em>, <em>validate_fields=False</em><span class="sig-paren">)</span></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">peewee._WriteQuery</span></code></p>
+<dl class="method">
+<dt id="sanic_peewee.Peewee.InsertQuery.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.InsertQuery.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sanic_peewee.Peewee.InsertQuery.is_insert_returning">
+<code class="descname">is_insert_returning</code><a class="headerlink" href="#sanic_peewee.Peewee.InsertQuery.is_insert_returning" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.InsertQuery.join">
+<code class="descname">join</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.InsertQuery.join" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.InsertQuery.on_conflict">
+<code class="descname">on_conflict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.InsertQuery.on_conflict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.InsertQuery.return_id_list">
+<code class="descname">return_id_list</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.InsertQuery.return_id_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.InsertQuery.sql">
+<code class="descname">sql</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.InsertQuery.sql" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.InsertQuery.upsert">
+<code class="descname">upsert</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.InsertQuery.upsert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.InsertQuery.where">
+<code class="descname">where</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.InsertQuery.where" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descname">SelectQuery</code><span class="sig-paren">(</span><em>model_class</em>, <em>*selection</em><span class="sig-paren">)</span></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">peewee.Query</span></code></p>
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.aggregate">
+<code class="descname">aggregate</code><span class="sig-paren">(</span><em>aggregation=None</em>, <em>convert=True</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.aggregate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.aggregate_rows">
+<code class="descname">aggregate_rows</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.aggregate_rows" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.alias">
+<code class="descname">alias</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.alias" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.annotate">
+<code class="descname">annotate</code><span class="sig-paren">(</span><em>rel_model</em>, <em>annotation=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.annotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.compound_op">
+<code class="descname">compound_op</code><span class="sig-paren">(</span><em>operator</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.compound_op" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.count">
+<code class="descname">count</code><span class="sig-paren">(</span><em>clear_limit=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.dicts">
+<code class="descname">dicts</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.dicts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.distinct">
+<code class="descname">distinct</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.distinct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.exists">
+<code class="descname">exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.first">
+<code class="descname">first</code><span class="sig-paren">(</span><em>n=1</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.first" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.for_update">
+<code class="descname">for_update</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.for_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.from_">
+<code class="descname">from_</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.from_" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.get_query_meta">
+<code class="descname">get_query_meta</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.get_query_meta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.group_by">
+<code class="descname">group_by</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.group_by" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.having">
+<code class="descname">having</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.having" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.iterator">
+<code class="descname">iterator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.iterator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.limit">
+<code class="descname">limit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.limit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.naive">
+<code class="descname">naive</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.naive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.offset">
+<code class="descname">offset</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.offset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.order_by">
+<code class="descname">order_by</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.order_by" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.paginate">
+<code class="descname">paginate</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.paginate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.peek">
+<code class="descname">peek</code><span class="sig-paren">(</span><em>n=1</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.peek" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.select">
+<code class="descname">select</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.select" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.sql">
+<code class="descname">sql</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.sql" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.tuples">
+<code class="descname">tuples</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.tuples" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.union_all">
+<code class="descname">union_all</code><span class="sig-paren">(</span><em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.union_all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.verify_naive">
+<code class="descname">verify_naive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.verify_naive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.window">
+<code class="descname">window</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.window" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.with_lock">
+<code class="descname">with_lock</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.with_lock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.SelectQuery.wrapped_count">
+<code class="descname">wrapped_count</code><span class="sig-paren">(</span><em>clear_limit=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.SelectQuery.wrapped_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descname">UpdateQuery</code><span class="sig-paren">(</span><em>model_class</em>, <em>update=None</em><span class="sig-paren">)</span></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">peewee._WriteQuery</span></code></p>
+<dl class="method">
+<dt id="sanic_peewee.Peewee.UpdateQuery.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.UpdateQuery.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.UpdateQuery.iterator">
+<code class="descname">iterator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.UpdateQuery.iterator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.UpdateQuery.join">
+<code class="descname">join</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.UpdateQuery.join" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.UpdateQuery.on_conflict">
+<code class="descname">on_conflict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.UpdateQuery.on_conflict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sanic_peewee.Peewee.UpdateQuery.sql">
+<code class="descname">sql</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sanic_peewee.Peewee.UpdateQuery.sql" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">sanic_peewee package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-sanic_peewee.async_manager">sanic_peewee.async_manager module</a></li>
+<li><a class="reference internal" href="#module-sanic_peewee.core">sanic_peewee.core module</a></li>
+<li><a class="reference internal" href="#module-sanic_peewee.mixins">sanic_peewee.mixins module</a></li>
+<li><a class="reference internal" href="#module-sanic_peewee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="transaction.html" title="previous chapter">事务操作</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/sanic_peewee.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, hsz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/sanic_peewee.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

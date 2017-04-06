@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sanic_peewee.async_manager &#8212; sanic_peewee  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for sanic_peewee.async_manager</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">@Author: Huang Sizhe</span>
+<span class="sd">@Date:   01-Apr-2017</span>
+<span class="sd">@Email:  hsz1273327@gmail.com</span>
+<span class="sd">@Last modified by:   Huang Sizhe</span>
+<span class="sd">@Last modified time: 06-Apr-2017</span>
+<span class="sd">@License: MIT</span>
+<span class="sd">@Description:</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AsyncManager&quot;</span><span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">peewee_async</span> <span class="k">import</span> <span class="n">Manager</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+
+
+<div class="viewcode-block" id="AsyncManager"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.async_manager.AsyncManager">[docs]</a><span class="k">class</span> <span class="nc">AsyncManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    继承自peewee_async的异步管理工具,此处用来构造model父类所携带的aio对象</span>
+
+<span class="sd">    async manager from peewee_async.Manager.here we use it in constructing the aio object in model&#39;s partent class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_model_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;构造函数</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            _model_class (class): - 参数用来绑定实例到model类的aio对象</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AsyncManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_class</span> <span class="o">=</span> <span class="n">_model_class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">allow_sync</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_do_fill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;利用偏函数将方法第一位的类对象绑定为自身所在的类</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            _model_class (class): - 参数用来绑定实例到model类的aio对象</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            object: - 将方法对应偏函数运行,结果看所运行的函数结果是什么</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_class_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">super</span><span class="p">(</span><span class="n">AsyncManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">),</span> <span class="n">method</span><span class="p">)</span>
+        <span class="n">pf</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_class_method</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_class</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pf</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AsyncManager.create"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.async_manager.AsyncManager.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new object saved to database.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            args (list): - 用来创建数据的参数</span>
+<span class="sd">            kwargs (dict): - 用来创建数据的参数</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            object: - 将方法对应偏函数运行,结果看所运行的函数结果是什么</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            await &lt;Class&gt;.aio.create(\*args,\*\*kwargs)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_fill</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AsyncManager.get"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.async_manager.AsyncManager.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the model instance.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            args  (list): - 用来标识要get的数据的参数</span>
+<span class="sd">            kwargs (dict): - 用来标识要get的数据的参数</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            object: - 获取的对应object</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            async def my_async_func():</span>
+<span class="sd">                obj1 = await &lt;Class&gt;.aio.get(MyModel, id=1)</span>
+<span class="sd">                obj2 = await &lt;Class&gt;.aio.get(MyModel, MyModel.id == 1)</span>
+<span class="sd">                obj3 = await &lt;Class&gt;.aio.get(MyModel.select().where(MyModel.id == 1))</span>
+
+<span class="sd">        All will return MyModel instance with id = 1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_fill</span><span class="p">(</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AsyncManager.get_or_create"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.async_manager.AsyncManager.get_or_create">[docs]</a>    <span class="k">def</span> <span class="nf">get_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Try to get an object or create it with the specified defaults.</span>
+<span class="sd">        Return 2-tuple containing the model instance and a boolean</span>
+<span class="sd">        indicating whether the instance was created.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            defaults (dict): - 默认创建的对象参数</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            object: - 将方法对应偏函数运行,结果看所运行的函数结果是什么</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_fill</span><span class="p">(</span><span class="s1">&#39;get_or_create&#39;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="n">defaults</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AsyncManager.create_or_get"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.async_manager.AsyncManager.create_or_get">[docs]</a>    <span class="k">def</span> <span class="nf">create_or_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Try to create new object with specified data. If object already</span>
+<span class="sd">        exists, then try to get it by unique fields.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            kwargs (dict): - 创建或者获取对象所用到的字段</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            object: - 将方法对应偏函数运行,结果看所运行的函数结果是什么</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_fill</span><span class="p">(</span><span class="s1">&#39;create_or_get&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AsyncManager.execute"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.async_manager.AsyncManager.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            query (peewee.Query): - 要执行的请求</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            object: - 将方法对应偏函数运行,结果看所运行的请求结果是什么</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../sanic_peewee.html">sanic_peewee</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, hsz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
