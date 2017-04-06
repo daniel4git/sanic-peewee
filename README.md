@@ -2,8 +2,8 @@
 @Author: Huang Sizhe
 @Date:   05-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:
-@Last modified time: 2017-04-06T00:35:59+08:00
+@Last modified by:   Huang Sizhe
+@Last modified time: 06-Apr-2017
 @License: MIT
 -->
 
@@ -11,36 +11,38 @@
 
 # sanic-peewee
 
+sanic-peewee 是一个基于async-peewee的sanic扩展旨在为sanic提供便捷的异步orm操作
+
 sanic-peewee is a async_peewee orm extension for sanic,
 I hope users can deal with the database simplely and efectively when using sanic.
 
 
-## Features
+## 特点 Features
 
-+ a peewee API similar to peewee's standard, blocking API.
-+ support for async/await (PEP 492) constructs
-+ use database url (peewee's playhose)
-+ support pool and pg's ext (peewee-async)
-+ sync api for creating and delecting tables,async api for GRUD data.
++ 接近阻塞版peewee的操作接口 // a peewee API similar to peewee's standard, blocking API.
++ 支持3.5版本以上的 // support for async/await (PEP 492) constructs
++ 使用简洁的database url // use database url (peewee's playhose)
++ 支持异步的事务,连接池以及peewee的pg扩展 // support transaction, pool and pg's ext (peewee-async)
++ 阻塞的处理table的增删,异步的处理数据的增删改查操作 //sync api for creating and delecting tables,async api for GRUD data.
 
 
-## Requirements
+## 依赖 Requirements
 
 1. aiomysql>=0.0.9
-+ aiopg>=0.13.0
-+ peewee>=2.9.1
-+ peewee-async>=0.5.7
-+ psycopg2>=2.7.1
-+ PyMySQL>=0.7.10
-+ sanic>=0.4.1
+2. aiopg>=0.13.0
+3. peewee>=2.9.1
+4. peewee-async>=0.5.7
+5. psycopg2>=2.7.1
+6. PyMySQL>=0.7.10
+7. sanic>=0.4.1
 
-## Installation
+## 安装 Installation
 
     pip install sanic-peewee
 
+## 文档 Document
 
-
-## Example
+## 例子 Example
 
 ```python
 from sanic import Sanic

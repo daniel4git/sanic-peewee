@@ -4,8 +4,8 @@
 @Author: Huang Sizhe
 @Date:   05-Apr-2017
 @Email:  hsz1273327@gmail.com
-# @Last modified by:
-# @Last modified time: 2017-04-06T00:14:19+08:00
+@Last modified by:   Huang Sizhe
+@Last modified time: 06-Apr-2017
 @License: MIT
 @Description:
 """
@@ -25,8 +25,6 @@ from peewee_async import delete_object, delete
 from peewee_async import get_object, select
 from peewee_async import update_object, update
 
-update_object
-from peewee import SelectQuery, UpdateQuery, InsertQuery, DeleteQuery
 from peewee import InternalError
 
 class TableHandlerMixin:
@@ -80,22 +78,30 @@ class TransactionHandlerMixin:
     """
 
     def async_atomic(self):
+        """原子操作
+        使用:
+        async with db.async_atomic:
+        .....
+        """
         return atomic(self.db)
 
     def async_savepoint(self):
+        """savepoint操作
+        使用:
+        async with db.async_savepoint:
+        """
         return savepoint(self.db)
 
     def async_transaction(self):
+        """事务操作
+        使用:
+        async with db.async_transaction:
+        """
         return transaction(self.db)
 
 
 class QueryHandlerMixin:
     """异步请求"""
-
-    SelectQuery = SelectQuery
-    UpdateQuery = UpdateQuery
-    InsertQuery = InsertQuery
-    DeleteQuery = DeleteQuery
 
     class aio:
         @staticmethod
@@ -140,12 +146,18 @@ class QueryHandlerMixin:
 
         @staticmethod
         def prefetch(query, *subqueries):
+            """预处理
+            """
             return prefetch(query, *subqueries)
 
         @staticmethod
         def scalar(query, as_tuple=False):
+            """Scalar 函数
+            """
             return scalar(query, as_tuple=as_tuple)
 
         @staticmethod
         def count(query, clear_limit=False):
+            """数个数
+            """
             return count(query, clear_limit=clear_limit)

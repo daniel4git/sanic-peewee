@@ -4,8 +4,8 @@
 @Author: Huang Sizhe
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-# @Last modified by:
-# @Last modified time: 2017-04-06T00:27:01+08:00
+@Last modified by:   Huang Sizhe
+@Last modified time: 06-Apr-2017
 @License: MIT
 @Description:
 """
@@ -22,9 +22,21 @@ from .async_manager import AsyncManager
 from playhouse.db_url import parse
 
 class Core:
-
+    """核心类,作为Peewee的父类,主要是管数据库连接,与sainc对象绑定,以及生成model父类
+    """
     def _database(self,DBURL=None):
-        """dburl:
+        """
+        _database用于创建数据库的async连接
+
+        Parameters:
+        DBURL (str): - batabase url
+
+        Return:
+            object: - 不同数据库连接的对象
+
+
+
+        dburl例子如下:
         postgresql://user:password@ip:port/dbname
         mysql://user:passwd@ip:port/dbname
         mysql+pool://user:passwd@ip:port/dbname?max_connections=20&stale_timeout=300
@@ -68,6 +80,8 @@ class Core:
             self.db = self._database(DBURL)
 
     def init_app(self, app):
+        """绑定app
+        """
         if not self.db:
             if app.config.DBURL:
                 self.db = self._database(app.config.DBURL)
@@ -88,16 +102,6 @@ class Core:
                 return _instance
 
         class AsyncBase(Model, metaclass=_BlockedMeta):
-            # @classmethod
-            # def createTable(clz):
-            #     database = clz.Meta.database
-            #     database.set_allow_sync(True)
-            #     try:
-            #         clz.create_table(True)
-            #         database.close()
-            #     except:
-            #         print("table Exist")
-            #     database.set_allow_sync(False)
             def to_dict(self):
                 return self._data
 
