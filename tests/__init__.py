@@ -8,6 +8,20 @@
 @Last modified time: 07-Apr-2017
 @License: MIT
 @Description:
+
+测试需要自己先创建数据库
+
+pg: `createdb test_pool`
+
+然后ext_pool需要安装一个插件hstore
+
+psql test_ext_pool -c 'create extension hstore;
+
+所有数据库都安装:
+
+psql template1 -c 'create extension hstore;'
+
+
 """
 from sanic_peewee import Peewee
 from sanic.config import Config
@@ -24,33 +38,31 @@ DBURLS = {
         database='test_sql',
         port=5432,
         host='127.0.0.1',
-        user='postgres',
-        password='hsz881224'
+        user='huangsizhe',#postgres
+        password='',#hsz881224
     ),
     'postgres-ext': "postgresqlext://{user}:{password}@{host}:{port}/{database}".format(
         database='test_ext',
-        port=3306,
+        port=5432,
         host='127.0.0.1',
-        user='root',
-        password='hsz881224'
+        user='huangsizhe',#postgres
+        password='',#hsz881224
     ),
-    'postgres-pool': "postgresql+pool://{user}:{password}@{host}:{port}/{database}?max_connections={max_connections}&stale_timeout={stale_timeout}".format(
+    'postgres-pool': "postgresql+pool://{user}:{password}@{host}:{port}/{database}?max_connections={max_connections}".format(
         database='test_pool',
-        port=3306,
+        port=5432,
         host='127.0.0.1',
-        user='root',
-        password='hsz881224',
-        max_connections=20,
-        stale_timeout=300
+        user='huangsizhe',#postgres
+        password='',#hsz881224
+        max_connections=20
     ),
-    'postgres-pool-ext': "postgresqlext+pool://{user}:{password}@{host}:{port}/{database}?max_connections={max_connections}&stale_timeout={stale_timeout}".format(
+    'postgres-pool-ext': "postgresqlext+pool://{user}:{password}@{host}:{port}/{database}?max_connections={max_connections}".format(
         database='test_ext_pool',
-        port=3306,
+        port=5432,
         host='127.0.0.1',
-        user='root',
-        password='hsz881224',
-        max_connections=20,
-        stale_timeout=300
+        user='huangsizhe',#postgres
+        password='',#hsz881224
+        max_connections=20
     ),
     'mysql': "mysql://{user}:{password}@{host}:{port}/{database}".format(
         database='test_sql',
@@ -59,14 +71,13 @@ DBURLS = {
         user='root',
         password='hsz881224'
     ),
-    'mysql-pool': "mysql+pool://{user}:{password}@{host}:{port}/{database}?max_connections={max_connections}&stale_timeout={stale_timeout}".format(
+    'mysql-pool': "mysql+pool://{user}:{password}@{host}:{port}/{database}?max_connections={max_connections}".format(
         database='test_pool',
         port=3306,
         host='127.0.0.1',
         user='root',
         password='hsz881224',
-        max_connections=20,
-        stale_timeout=300
+        max_connections=20
     )
 }
 
