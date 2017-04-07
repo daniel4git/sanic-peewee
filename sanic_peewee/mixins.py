@@ -5,7 +5,7 @@
 @Date:   05-Apr-2017
 @Email:  hsz1273327@gmail.com
 @Last modified by:   huangsizhe
-@Last modified time: 07-Apr-2017
+@Last modified time: 08-Apr-2017
 @License: MIT
 @Description:
 """
@@ -27,6 +27,7 @@ from peewee_async import update_object, update
 
 from peewee import InternalError
 
+from peewee import SelectQuery, UpdateQuery, InsertQuery, DeleteQuery
 
 class TableHandlerMixin:
     """针对表格操作的Mixin.同步阻塞操作
@@ -105,14 +106,13 @@ class TransactionHandlerMixin:
         """事务操作,也和async_atomic一样用async with """
         return transaction(self.db)
 
-
 class QueryHandlerMixin:
     """异步请求"""
 
     class aio:
         @staticmethod
         def execute(query):
-            return excute(query)
+            return execute(query)
 
         @staticmethod
         def insert(query, **data):

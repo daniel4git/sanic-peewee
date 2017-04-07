@@ -98,6 +98,9 @@ class Core:
         app.extensions['SanicPeewee'] = self
         return self
 
+    def close(self):
+        return self.db.close_async()
+
     def _get_meta_db_class(self):
         """creating a declartive class model for db"""
         db = self.db

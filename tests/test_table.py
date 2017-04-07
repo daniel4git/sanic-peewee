@@ -24,7 +24,7 @@ from tests.models import postgres_extTestModelAlpha, postgres_extTestModelBeta, 
 from tests.models import postgresql_ext_poolTestModelAlpha, postgresql_ext_poolTestModelBeta, postgresql_ext_poolUUIDTestModel
 
 
-class TestStringMethods(unittest.TestCase):
+class TestTable(unittest.TestCase):
 
     def setUp(self):
         pass
@@ -36,10 +36,10 @@ class TestStringMethods(unittest.TestCase):
 
         assert peewee_mysql.create_tables([MysqlTestModelAlpha,
                                            MysqlTestModelBeta,
-                                           MysqlUUIDTestModel])
+                                           MysqlUUIDTestModel],safe=True)
         assert peewee_mysql.drop_tables([MysqlTestModelAlpha,
                                          MysqlTestModelBeta,
-                                         MysqlUUIDTestModel])
+                                         MysqlUUIDTestModel],safe=True)
 
     def test_mysql_pool_table(self):
 

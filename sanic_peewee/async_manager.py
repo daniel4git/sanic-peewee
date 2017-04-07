@@ -4,8 +4,8 @@
 @Author: Huang Sizhe
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   Huang Sizhe
-@Last modified time: 06-Apr-2017
+@Last modified by:   huangsizhe
+@Last modified time: 07-Apr-2017
 @License: MIT
 @Description:
 """
@@ -84,7 +84,7 @@ class AsyncManager(Manager):
         """Try to get an object or create it with the specified defaults.
         Return 2-tuple containing the model instance and a boolean
         indicating whether the instance was created.
-        
+
         Parameters:
             defaults (dict): - 默认创建的对象参数
 
