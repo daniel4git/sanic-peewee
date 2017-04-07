@@ -4,8 +4,8 @@
 @Author: Huang Sizhe
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   Huang Sizhe
-@Last modified time: 06-Apr-2017
+@Last modified by:   huangsizhe
+@Last modified time: 07-Apr-2017
 @License: MIT
 @Description:
 """
@@ -63,8 +63,9 @@ class Core:
             else:
                 dbtype = DBURL.split("://")[0]
                 dbinfo = parse(DBURL)
-                dbinfo["password"] = dbinfo["passwd"]
-                del dbinfo["passwd"]
+                if dbinfo.get("passwd"):
+                    dbinfo["password"] = dbinfo["passwd"]
+                    del dbinfo["passwd"]
                 return TYPES.get(dbtype, lambda **ks: _raise())(**dbinfo)
 
     def __call__(self, app=None):
@@ -79,16 +80,19 @@ class Core:
         """
         if DBURL:
             self.db = self._database(DBURL)
+        else:
+            self.db = None
 
     def init_app(self, app):
         """绑定app
         """
         if not self.db:
-            if app.config.DBURL:
-                self.db = self._database(app.config.DBURL)
+            if app.config.DB_URL:
+                self.db = self._database(app.config.DB_URL)
+            else:
+                raise AssertionError("need a db url")
 
         self.AsyncModel = self._get_meta_db_class()
-        print(self.AsyncModel)
         if "extensions" not in app.__dir__():
             app.extensions = {}
         app.extensions['SanicPeewee'] = self

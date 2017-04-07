@@ -4,8 +4,8 @@
 @Author: Huang Sizhe
 @Date:   05-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   Huang Sizhe
-@Last modified time: 06-Apr-2017
+@Last modified by:   huangsizhe
+@Last modified time: 07-Apr-2017
 @License: MIT
 @Description:
 """
@@ -48,8 +48,11 @@ class TableHandlerMixin:
             database.close()
         except InternalError as exist:
             log.info("table exist")
+            return False
         except Exception as e:
             raise e
+        else:
+            return True
         finally:
             database.set_allow_sync(False)
 
@@ -70,8 +73,11 @@ class TableHandlerMixin:
             database.close()
         except InternalError as exist:
             log.info("interinterErrornalError")
+            return False
         except Exception as e:
             raise e
+        else:
+            return True
         finally:
             database.set_allow_sync(False)
 
