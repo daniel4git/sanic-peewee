@@ -4,7 +4,7 @@
 @Author: Huang Sizhe <huangsizhe>
 @Date:   06-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   Huang Sizhe
+@Last modified by:   huangsizhe
 @Last modified time: 08-Apr-2017
 @License: MIT
 @Description:
@@ -95,7 +95,6 @@ class TestCRUD(unittest.TestCase):
         await self.db.aio.execute(
             MysqlTestModelAlpha.delete().where(MysqlTestModelAlpha.text == text))
         return True
-
     async def object_delete_alpha(self,text):
         obj = await MysqlTestModelAlpha.aio.get(text=text)
         await self.db.delete(obj)
