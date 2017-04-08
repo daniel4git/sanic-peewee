@@ -2,8 +2,8 @@
 @Author: Huang Sizhe
 @Date:   05-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   Huang Sizhe
-@Last modified time: 06-Apr-2017
+@Last modified by:   huangsizhe
+@Last modified time: 08-Apr-2017
 @License: MIT
 -->
 
@@ -45,6 +45,25 @@ this project's idea is from [the examples of sanic's official documents](https:/
 ## 文档 Document
 
 [sanic-peewee](https://sanic-extensions.github.io/sanic-peewee/)
+
+## 测试 Test
+
+测试需要在数据库中新建几张对应的表,并且在测试代码中填上数据库的账号密码
+
+本项目测试覆盖率88%
+
+测试命令:
+
+```shell
+python3 -m unittest discover -v -s ./tests
+```
+
+代码覆盖:
+
+```shell
+coverage3 run --source=sanic_peewee  -m unittest discover -v -s ./tests
+coverage3 html -d coverage_html
+```
 
 ## 例子 Example
 
