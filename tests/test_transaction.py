@@ -4,7 +4,7 @@
 @Author: Huang Sizhe <huangsizhe>
 @Date:   06-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   huangsizhe
+@Last modified by:   Huang Sizhe
 @Last modified time: 08-Apr-2017
 @License: MIT
 @Description:
@@ -46,5 +46,27 @@ class TestTransaction(unittest.TestCase):
         """Run test coroutine against available databases.
         """
         self.loop.run_until_complete(test())
-    def test_atomic():
-        
+    def test_atomic(self):
+        async def _test():
+            obj1 = await MysqlUUIDTestModel.aio.create(text='FOO')
+            obj2 = await MysqlUUIDTestModel.aio.create(text='BAR')
+            obj3 = await MysqlUUIDTestModel.aio.create(text='FOOBAR')
+            obj1_id = obj1.id
+            obj2_id = obj2.id
+            obj3_id = obj3.id
+            async with self.db.async_atomic():
+                obj1.text = 'foo'
+                obj2.text = 'bar'
+                obj3.text = 'foobar'
+                await self.db.aio.update(obj1)
+                await self.db.aio.update(obj2)
+                await self.db.aio.update(obj3)
+
+            res1 = await MysqlUUIDTestModel.aio.get(id=obj1_id)
+            self.assertEqual(res1.text, 'foo')
+            res2 = await MysqlUUIDTestModel.aio.get(id=obj2_id)
+            self.assertEqual(res2.text, 'bar')
+            res3 = await MysqlUUIDTestModel.aio.get(id=obj3_id)
+            self.assertEqual(res3.text, 'foobar')
+
+        self.run_with_databases(_test)
