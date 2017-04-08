@@ -51,5 +51,5 @@ class Peewee(Core, TableHandlerMixin, TransactionHandlerMixin, QueryHandlerMixin
     InsertQuery = InsertQuery
     DeleteQuery = DeleteQuery
 
-    def __init__(self, dburl:string=None):
+    def __init__(self, dburl=None):
         super().__init__(dburl)

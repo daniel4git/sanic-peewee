@@ -74,17 +74,16 @@ class TestCRUD(unittest.TestCase):
 
     async def update_alpha(self,old, new):
         await self.db.aio.update(
-
-            self.db.UpdateQuery(MysqlTestModelAlpha, update = {"text":"new").where(MysqlTestModelAlpha.text == old))
+            self.db.UpdateQuery(MysqlTestModelAlpha, {MysqlTestModelAlpha.text:new}).where(MysqlTestModelAlpha.text == old))
         return True
     async def execute_update_alpha(self,old, new):
         await self.db.aio.execute(
             MysqlTestModelAlpha.update(text=new).where(MysqlTestModelAlpha.text == old))
         return True
     async def object_update_alpha(self,old, new):
-        obj = await MysqlTestModelAlpha.aio.get(text=text)
+        obj = await MysqlTestModelAlpha.aio.get(text=old)
         obj.text = new
-        await self.db.update(obj)
+        await self.db.aio.update(obj)
         return True
 
     async def delete_alpha(self,text):
@@ -97,7 +96,7 @@ class TestCRUD(unittest.TestCase):
         return True
     async def object_delete_alpha(self,text):
         obj = await MysqlTestModelAlpha.aio.get(text=text)
-        await self.db.delete(obj)
+        await self.db.aio.delete(obj)
         return True
 
     def test_create_select_count(self):
