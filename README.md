@@ -16,6 +16,8 @@ sanic-peewee 是一个基于async-peewee的sanic扩展旨在为sanic提供便捷
 sanic-peewee is a async_peewee orm extension for sanic,
 I hope users can deal with the database simplely and efectively when using sanic.
 
+本项目受启发于官方文档的[例子](https://github.com/channelcat/sanic/blob/master/examples/sanic_peewee.py)
+this project's idea is from [the examples of sanic's official documents](https://github.com/channelcat/sanic/blob/master/examples/sanic_peewee.py)
 
 ## 特点 Features
 
