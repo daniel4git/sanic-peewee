@@ -4,10 +4,9 @@
 @Author: Huang Sizhe
 @Date:   05-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   Huang Sizhe
-@Last modified time: 08-Apr-2017
+# @Last modified by:   Huang Sizhe
+# @Last modified time: 08-Apr-2017
 @License: MIT
-@Description:
 """
 __all__ = ["TableHandlerMixin", "TransactionHandlerMixin", "QueryHandlerMixin"]
 from sanic.log import log
@@ -89,7 +88,7 @@ class TransactionHandlerMixin:
     def async_atomic(self):
         """原子操作
 
-        使用:
+        Example:
         obj = await TestModel.aio.create(text='FOO')
         obj_id = obj.id
         async with db.async_atomic():

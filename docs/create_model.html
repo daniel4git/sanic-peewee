@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>异步请求操作 &#8212; sanic_peewee  documentation</title>
+    <title>创建model &#8212; sanic_peewee  documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,8 +26,8 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="事务操作" href="transaction.html" />
-    <link rel="prev" title="数据库的表操作" href="tablehandler.html" />
+    <link rel="next" title="数据库的表操作" href="tablehandler.html" />
+    <link rel="prev" title="连接数据库" href="db_connection.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -43,9 +43,24 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="id1">
-<h1>异步请求操作<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>123</p>
+  <div class="section" id="model">
+<h1>创建model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h1>
+<p>不同于peewee或者peewee-async,我们创建的model继承自与app绑定后的Peewee对象下的类`AsyncModel`.
+它已经绑定了内部类中的database为app的连接数据库.</p>
+<p>: 绑定了数据库:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+    <span class="n">database</span> <span class="o">=</span> <span class="n">db</span>
+</pre></div>
+</div>
+<p>但定义方式与peewee完全一样,使用相同的Field.</p>
+<p>一个典型的model如下:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">peewee</span> <span class="o">=</span> <span class="n">Peewee</span><span class="p">(</span><span class="n">dburl</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">peewee</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">KeyValue</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">AsyncModel</span><span class="p">):</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">TextField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -57,15 +72,15 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="tablehandler.html" title="previous chapter">数据库的表操作</a></li>
-      <li>Next: <a href="transaction.html" title="next chapter">事务操作</a></li>
+      <li>Previous: <a href="db_connection.html" title="previous chapter">连接数据库</a></li>
+      <li>Next: <a href="tablehandler.html" title="next chapter">数据库的表操作</a></li>
   </ul></li>
 </ul>
 </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/queryhandler.rst.txt"
+      <li><a href="_sources/create_model.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -91,7 +106,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
-      <a href="_sources/queryhandler.rst.txt"
+      <a href="_sources/create_model.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

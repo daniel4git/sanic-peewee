@@ -4,8 +4,8 @@
 @Author: Huang Sizhe <huangsizhe>
 @Date:   06-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   huangsizhe
-@Last modified time: 08-Apr-2017
+# @Last modified by:   Huang Sizhe
+# @Last modified time: 08-Apr-2017
 @License: MIT
 @Description:
 以mysql作为例子

@@ -42,6 +42,8 @@ I hope users can deal with the database simplely and efectively when using sanic
 
 ## 文档 Document
 
+[sanic-peewee](https://sanic-extensions.github.io/sanic-peewee/)
+
 ## 例子 Example
 
 ```python

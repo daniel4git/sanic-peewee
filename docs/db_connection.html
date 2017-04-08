@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>连接数据库 &#8212; sanic_peewee  documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="创建model" href="create_model.html" />
+    <link rel="prev" title="Sanic-peewee" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>连接数据库<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>sanic-peewee是 .. peewee-async: <a class="reference external" href="https://github.com/05bit/peewee-async">https://github.com/05bit/peewee-async</a> 的封装,
+它支持的数据库目前有` PostgreSQL`和`MySQL`两种.
+其中`PostgreSQL`支持的更加好一些,两种数据库都可以使用池连接,pg也可以使用peewee中的扩展连接.</p>
+<p>要使用pg,需要额外安装`aiopg`,要使用mysql则需要额外安装`aiomysql`.</p>
+<p>他们的池连接方式可以设定参数`max_connections`也就是最大连接数.</p>
+<p>这些信息都需要在database url中体现</p>
+<div class="section" id="database-url">
+<h2>使用 Database Url<a class="headerlink" href="#database-url" title="Permalink to this headline">¶</a></h2>
+<p>sanic-peewee只能使用Database Url来定义连接.它可以在程序内定义,也可以在app的config中定义.
+这么做的好处是减少参数数目,统一的格式也更加利于管理</p>
+<p>下面是给出的合法的dburl:</p>
+<ul class="simple">
+<li>postgresql://user:password&#64;host:port/dbname</li>
+<li>mysql://user:password&#64;host:port/dbname</li>
+<li>mysql+pool://user:password&#64;host:port/dbname?max_connections=20</li>
+<li>postgresql+pool://user:passwd&#64;ip:port/dbname?max_connections=20</li>
+<li>postgresqlext://user:passwd&#64;ip:port/dbname</li>
+<li>postgresqlext+pool://user:passwd&#64;ip:port/dbname?max_connections=20</li>
+</ul>
+</div>
+<div class="section" id="sanic-app">
+<h2>初始化扩展和绑定sanic app<a class="headerlink" href="#sanic-app" title="Permalink to this headline">¶</a></h2>
+<p>我们的扩展初始化可以带database url作为参数;如果不带,
+那么他就会在之后绑定app的时候通过查找app.config.DB_URL来初始化连接的数据库.</p>
+<p>方法一,使用dburl作为参数初始化:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sanic</span> <span class="k">import</span> <span class="n">Sanic</span>
+<span class="kn">from</span> <span class="nn">sanic_peewee</span> <span class="k">import</span> <span class="n">Peewee</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Sanic</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">dburl</span> <span class="o">=</span> <span class="s2">&quot;mysql://</span><span class="si">{user}</span><span class="s2">:</span><span class="si">{password}</span><span class="s2">@</span><span class="si">{host}</span><span class="s2">:</span><span class="si">{port}</span><span class="s2">/</span><span class="si">{database}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;test1&#39;</span><span class="p">,</span>
+    <span class="n">port</span><span class="o">=</span><span class="mi">3306</span><span class="p">,</span>
+    <span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+    <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s1">&#39;hsz881224&#39;</span>
+<span class="p">)</span>
+<span class="n">peewee</span> <span class="o">=</span> <span class="n">Peewee</span><span class="p">(</span><span class="n">dburl</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">peewee</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>方法二,使用app.config.DB_URL作为参数初始化:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sanic</span> <span class="k">import</span> <span class="n">Sanic</span>
+<span class="kn">from</span> <span class="nn">sanic_peewee</span> <span class="k">import</span> <span class="n">Peewee</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Sanic</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">DB_URL</span> <span class="o">=</span> <span class="s2">&quot;mysql://</span><span class="si">{user}</span><span class="s2">:</span><span class="si">{password}</span><span class="s2">@</span><span class="si">{host}</span><span class="s2">:</span><span class="si">{port}</span><span class="s2">/</span><span class="si">{database}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;test1&#39;</span><span class="p">,</span>
+    <span class="n">port</span><span class="o">=</span><span class="mi">3306</span><span class="p">,</span>
+    <span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+    <span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s1">&#39;hsz881224&#39;</span>
+<span class="p">)</span>
+<span class="n">peewee</span> <span class="o">=</span> <span class="n">Peewee</span><span class="p">()</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">peewee</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">连接数据库</a><ul>
+<li><a class="reference internal" href="#database-url">使用 Database Url</a></li>
+<li><a class="reference internal" href="#sanic-app">初始化扩展和绑定sanic app</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Sanic-peewee</a></li>
+      <li>Next: <a href="create_model.html" title="next chapter">创建model</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/db_connection.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, hsz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/db_connection.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

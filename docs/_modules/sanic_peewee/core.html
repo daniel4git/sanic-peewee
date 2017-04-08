@@ -48,8 +48,8 @@
 <span class="sd">@Author: Huang Sizhe</span>
 <span class="sd">@Date:   01-Apr-2017</span>
 <span class="sd">@Email:  hsz1273327@gmail.com</span>
-<span class="sd">@Last modified by:   Huang Sizhe</span>
-<span class="sd">@Last modified time: 06-Apr-2017</span>
+<span class="sd"># @Last modified by:   Huang Sizhe</span>
+<span class="sd"># @Last modified time: 08-Apr-2017</span>
 <span class="sd">@License: MIT</span>
 <span class="sd">@Description:</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -85,10 +85,10 @@
 <span class="sd">        dburl例子如下:</span>
 <span class="sd">        postgresql://user:password@ip:port/dbname</span>
 <span class="sd">        mysql://user:passwd@ip:port/dbname</span>
-<span class="sd">        mysql+pool://user:passwd@ip:port/dbname?max_connections=20&amp;stale_timeout=300</span>
-<span class="sd">        postgresql+pool://user:passwd@ip:port/dbname?max_connections=20&amp;stale_timeout=300</span>
+<span class="sd">        mysql+pool://user:passwd@ip:port/dbname?max_connections=20</span>
+<span class="sd">        postgresql+pool://user:passwd@ip:port/dbname?max_connections=20</span>
 <span class="sd">        postgresqlext://user:passwd@ip:port/dbname</span>
-<span class="sd">        postgresqlext+pool://user:passwd@ip:port/dbname?max_connections=20&amp;stale_timeout=300</span>
+<span class="sd">        postgresqlext+pool://user:passwd@ip:port/dbname?max_connections=20</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">TYPES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;postgresql&quot;</span><span class="p">:</span> <span class="n">PostgresqlDatabase</span><span class="p">,</span>
@@ -107,8 +107,9 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">dbtype</span> <span class="o">=</span> <span class="n">DBURL</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;://&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">dbinfo</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">DBURL</span><span class="p">)</span>
-                <span class="n">dbinfo</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dbinfo</span><span class="p">[</span><span class="s2">&quot;passwd&quot;</span><span class="p">]</span>
-                <span class="k">del</span> <span class="n">dbinfo</span><span class="p">[</span><span class="s2">&quot;passwd&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">dbinfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;passwd&quot;</span><span class="p">):</span>
+                    <span class="n">dbinfo</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dbinfo</span><span class="p">[</span><span class="s2">&quot;passwd&quot;</span><span class="p">]</span>
+                    <span class="k">del</span> <span class="n">dbinfo</span><span class="p">[</span><span class="s2">&quot;passwd&quot;</span><span class="p">]</span>
                 <span class="k">return</span> <span class="n">TYPES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dbtype</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">**</span><span class="n">ks</span><span class="p">:</span> <span class="n">_raise</span><span class="p">())(</span><span class="o">**</span><span class="n">dbinfo</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -123,20 +124,26 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">DBURL</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_database</span><span class="p">(</span><span class="n">DBURL</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Core.init_app"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.core.Core.init_app">[docs]</a>    <span class="k">def</span> <span class="nf">init_app</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;绑定app</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">DBURL</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_database</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">DBURL</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">DB_URL</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_database</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">DB_URL</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;need a db url&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">AsyncModel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_meta_db_class</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AsyncModel</span><span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;extensions&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">():</span>
             <span class="n">app</span><span class="o">.</span><span class="n">extensions</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">app</span><span class="o">.</span><span class="n">extensions</span><span class="p">[</span><span class="s1">&#39;SanicPeewee&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Core.close"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.core.Core.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">close_async</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">_get_meta_db_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;creating a declartive class model for db&quot;&quot;&quot;</span>

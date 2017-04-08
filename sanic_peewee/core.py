@@ -4,10 +4,9 @@
 @Author: Huang Sizhe
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   huangsizhe
-@Last modified time: 08-Apr-2017
+# @Last modified by:   Huang Sizhe
+# @Last modified time: 08-Apr-2017
 @License: MIT
-@Description:
 """
 __all__ = ["Core"]
 
@@ -41,10 +40,10 @@ class Core:
         dburl例子如下:
         postgresql://user:password@ip:port/dbname
         mysql://user:passwd@ip:port/dbname
-        mysql+pool://user:passwd@ip:port/dbname?max_connections=20&stale_timeout=300
-        postgresql+pool://user:passwd@ip:port/dbname?max_connections=20&stale_timeout=300
+        mysql+pool://user:passwd@ip:port/dbname?max_connections=20
+        postgresql+pool://user:passwd@ip:port/dbname?max_connections=20
         postgresqlext://user:passwd@ip:port/dbname
-        postgresqlext+pool://user:passwd@ip:port/dbname?max_connections=20&stale_timeout=300
+        postgresqlext+pool://user:passwd@ip:port/dbname?max_connections=20
         """
         TYPES = {
             "postgresql": PostgresqlDatabase,

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>连接数据库 &#8212; sanic_peewee  documentation</title>
+    <title>数据库的表操作 &#8212; sanic_peewee  documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,8 +26,8 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="创建model" href="create_model.html" />
-    <link rel="prev" title="Sanic-peewee" href="index.html" />
+    <link rel="next" title="异步请求操作" href="queryhandler.html" />
+    <link rel="prev" title="创建model" href="create_model.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -44,8 +44,18 @@
           <div class="body" role="main">
             
   <div class="section" id="id1">
-<h1>连接数据库<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>123</p>
+<h1>数据库的表操作<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>数据库的表操作是同步阻塞的,因此我们不会在app的请求中使用,而是在app运行loop前先进行处理.</p>
+<div class="section" id="id2">
+<h2>创建表格<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>创建表格使用.create_tables( model_classes:list&lt;model&gt;, log=log, safe=False)</p>
+<p>safe表示是否在创建表前先检测是否已经存在</p>
+</div>
+<div class="section" id="id3">
+<h2>删除表格<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>删除表格使用.drop_tables(self, model_classes, log=log, safe=False, cascade=False)</p>
+<p>其中safe标识是否在删除前先检测是否存在,cascade则是表示是否关联删除</p>
+</div>
 </div>
 
 
@@ -53,19 +63,28 @@
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">数据库的表操作</a><ul>
+<li><a class="reference internal" href="#id2">创建表格</a></li>
+<li><a class="reference internal" href="#id3">删除表格</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Sanic-peewee</a></li>
-      <li>Next: <a href="create_model.html" title="next chapter">创建model</a></li>
+      <li>Previous: <a href="create_model.html" title="previous chapter">创建model</a></li>
+      <li>Next: <a href="queryhandler.html" title="next chapter">异步请求操作</a></li>
   </ul></li>
 </ul>
 </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/db_connection.rst.txt"
+      <li><a href="_sources/tablehandler.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -91,7 +110,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
-      <a href="_sources/db_connection.rst.txt"
+      <a href="_sources/tablehandler.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

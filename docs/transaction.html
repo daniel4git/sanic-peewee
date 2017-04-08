@@ -45,7 +45,23 @@
             
   <div class="section" id="id1">
 <h1>事务操作<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>123</p>
+<p>db.async_atomic是实现原子操作的命令,他使用 async with 关键字处理异步上下文</p>
+<p>例子:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">obj1</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MysqlUUIDTestModel</span><span class="o">.</span><span class="n">aio</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;FOO&#39;</span><span class="p">)</span>
+<span class="n">obj2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MysqlUUIDTestModel</span><span class="o">.</span><span class="n">aio</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;BAR&#39;</span><span class="p">)</span>
+<span class="n">obj3</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MysqlUUIDTestModel</span><span class="o">.</span><span class="n">aio</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;FOOBAR&#39;</span><span class="p">)</span>
+<span class="n">obj1_id</span> <span class="o">=</span> <span class="n">obj1</span><span class="o">.</span><span class="n">id</span>
+<span class="n">obj2_id</span> <span class="o">=</span> <span class="n">obj2</span><span class="o">.</span><span class="n">id</span>
+<span class="n">obj3_id</span> <span class="o">=</span> <span class="n">obj3</span><span class="o">.</span><span class="n">id</span>
+<span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">async_atomic</span><span class="p">():</span>
+    <span class="n">obj1</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;foo&#39;</span>
+    <span class="n">obj2</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;bar&#39;</span>
+    <span class="n">obj3</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;foobar&#39;</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">aio</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">obj1</span><span class="p">)</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">aio</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">obj2</span><span class="p">)</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">aio</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">obj3</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 
 

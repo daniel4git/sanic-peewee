@@ -52,8 +52,8 @@
 <p>&#64;Author: Huang Sizhe
 &#64;Date:   01-Apr-2017
 &#64;Email:  <a class="reference external" href="mailto:hsz1273327&#37;&#52;&#48;gmail&#46;com">hsz1273327<span>&#64;</span>gmail<span>&#46;</span>com</a>
-&#64;Last modified by:   Huang Sizhe
-&#64;Last modified time: 06-Apr-2017
+&#64;Last modified by:   huangsizhe
+&#64;Last modified time: 07-Apr-2017
 &#64;License: MIT
 &#64;Description:</p>
 <dl class="class">
@@ -220,8 +220,8 @@ indicating whether the instance was created.</p>
 <p>&#64;Author: Huang Sizhe
 &#64;Date:   01-Apr-2017
 &#64;Email:  <a class="reference external" href="mailto:hsz1273327&#37;&#52;&#48;gmail&#46;com">hsz1273327<span>&#64;</span>gmail<span>&#46;</span>com</a>
-&#64;Last modified by:   Huang Sizhe
-&#64;Last modified time: 06-Apr-2017
+# &#64;Last modified by:   Huang Sizhe
+# &#64;Last modified time: 08-Apr-2017
 &#64;License: MIT
 &#64;Description:</p>
 <dl class="class">
@@ -229,6 +229,11 @@ indicating whether the instance was created.</p>
 <em class="property">class </em><code class="descclassname">sanic_peewee.core.</code><code class="descname">Core</code><span class="sig-paren">(</span><em>DBURL=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/core.html#Core"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.core.Core" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>核心类,作为Peewee的父类,主要是管数据库连接,与sainc对象绑定,以及生成model父类</p>
+<dl class="method">
+<dt id="sanic_peewee.core.Core.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/core.html#Core.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.core.Core.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="sanic_peewee.core.Core.init_app">
 <code class="descname">init_app</code><span class="sig-paren">(</span><em>app</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/core.html#Core.init_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.core.Core.init_app" title="Permalink to this definition">¶</a></dt>
@@ -243,8 +248,8 @@ indicating whether the instance was created.</p>
 <p>&#64;Author: Huang Sizhe
 &#64;Date:   05-Apr-2017
 &#64;Email:  <a class="reference external" href="mailto:hsz1273327&#37;&#52;&#48;gmail&#46;com">hsz1273327<span>&#64;</span>gmail<span>&#46;</span>com</a>
-&#64;Last modified by:   Huang Sizhe
-&#64;Last modified time: 06-Apr-2017
+# &#64;Last modified by:   Huang Sizhe
+# &#64;Last modified time: 08-Apr-2017
 &#64;License: MIT
 &#64;Description:</p>
 <dl class="class">
@@ -323,7 +328,7 @@ indicating whether the instance was created.</p>
 <dt id="sanic_peewee.mixins.TransactionHandlerMixin.async_atomic">
 <code class="descname">async_atomic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee/mixins.html#TransactionHandlerMixin.async_atomic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.mixins.TransactionHandlerMixin.async_atomic" title="Permalink to this definition">¶</a></dt>
 <dd><p>原子操作</p>
-<p>使用:
+<p>Example:
 obj = await TestModel.aio.create(text=&#8217;FOO&#8217;)
 obj_id = obj.id
 async with db.async_atomic():</p>
@@ -596,7 +601,7 @@ overrided save method for your model.</p>
 
 <dl class="class">
 <dt id="sanic_peewee.Peewee">
-<em class="property">class </em><code class="descclassname">sanic_peewee.</code><code class="descname">Peewee</code><span class="sig-paren">(</span><em>db=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee.html#Peewee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.Peewee" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sanic_peewee.</code><code class="descname">Peewee</code><span class="sig-paren">(</span><em>dburl=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sanic_peewee.html#Peewee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sanic_peewee.Peewee" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sanic_peewee.core.Core" title="sanic_peewee.core.Core"><code class="xref py py-class docutils literal"><span class="pre">sanic_peewee.core.Core</span></code></a>, <a class="reference internal" href="#sanic_peewee.mixins.TableHandlerMixin" title="sanic_peewee.mixins.TableHandlerMixin"><code class="xref py py-class docutils literal"><span class="pre">sanic_peewee.mixins.TableHandlerMixin</span></code></a>, <a class="reference internal" href="#sanic_peewee.mixins.TransactionHandlerMixin" title="sanic_peewee.mixins.TransactionHandlerMixin"><code class="xref py py-class docutils literal"><span class="pre">sanic_peewee.mixins.TransactionHandlerMixin</span></code></a>, <a class="reference internal" href="#sanic_peewee.mixins.QueryHandlerMixin" title="sanic_peewee.mixins.QueryHandlerMixin"><code class="xref py py-class docutils literal"><span class="pre">sanic_peewee.mixins.QueryHandlerMixin</span></code></a></p>
 <dl class="attribute">
 <dt id="sanic_peewee.Peewee.db">

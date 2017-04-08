@@ -48,8 +48,8 @@
 <span class="sd">@Author: Huang Sizhe</span>
 <span class="sd">@Date:   05-Apr-2017</span>
 <span class="sd">@Email:  hsz1273327@gmail.com</span>
-<span class="sd">@Last modified by:   Huang Sizhe</span>
-<span class="sd">@Last modified time: 06-Apr-2017</span>
+<span class="sd"># @Last modified by:   Huang Sizhe</span>
+<span class="sd"># @Last modified time: 08-Apr-2017</span>
 <span class="sd">@License: MIT</span>
 <span class="sd">@Description:</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -71,6 +71,7 @@
 
 <span class="kn">from</span> <span class="nn">peewee</span> <span class="k">import</span> <span class="n">InternalError</span>
 
+<span class="kn">from</span> <span class="nn">peewee</span> <span class="k">import</span> <span class="n">SelectQuery</span><span class="p">,</span> <span class="n">UpdateQuery</span><span class="p">,</span> <span class="n">InsertQuery</span><span class="p">,</span> <span class="n">DeleteQuery</span>
 
 <div class="viewcode-block" id="TableHandlerMixin"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.TableHandlerMixin">[docs]</a><span class="k">class</span> <span class="nc">TableHandlerMixin</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;针对表格操作的Mixin.同步阻塞操作</span>
@@ -92,8 +93,11 @@
             <span class="n">database</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">InternalError</span> <span class="k">as</span> <span class="n">exist</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;table exist&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">e</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">database</span><span class="o">.</span><span class="n">set_allow_sync</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
 
@@ -114,8 +118,11 @@
             <span class="n">database</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">InternalError</span> <span class="k">as</span> <span class="n">exist</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;interinterErrornalError&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">e</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">database</span><span class="o">.</span><span class="n">set_allow_sync</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div></div>
 
@@ -126,7 +133,7 @@
 <div class="viewcode-block" id="TransactionHandlerMixin.async_atomic"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.TransactionHandlerMixin.async_atomic">[docs]</a>    <span class="k">def</span> <span class="nf">async_atomic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;原子操作</span>
 
-<span class="sd">        使用:</span>
+<span class="sd">        Example:</span>
 <span class="sd">        obj = await TestModel.aio.create(text=&#39;FOO&#39;)</span>
 <span class="sd">        obj_id = obj.id</span>
 <span class="sd">        async with db.async_atomic():</span>
@@ -143,14 +150,13 @@
         <span class="sd">&quot;&quot;&quot;事务操作,也和async_atomic一样用async with &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">transaction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span></div></div>
 
-
 <div class="viewcode-block" id="QueryHandlerMixin"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin">[docs]</a><span class="k">class</span> <span class="nc">QueryHandlerMixin</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;异步请求&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="QueryHandlerMixin.aio"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio">[docs]</a>    <span class="k">class</span> <span class="nc">aio</span><span class="p">:</span>
         <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="QueryHandlerMixin.aio.execute"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio.execute">[docs]</a>        <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">excute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div>
 
         <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="QueryHandlerMixin.aio.insert"><a class="viewcode-back" href="../../sanic_peewee.html#sanic_peewee.mixins.QueryHandlerMixin.aio.insert">[docs]</a>        <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">):</span>
