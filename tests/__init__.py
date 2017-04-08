@@ -38,45 +38,45 @@ DBURLS = {
         database='test_sql',
         port=5432,
         host='127.0.0.1',
-        user='huangsizhe',#postgres
-        password='',#hsz881224
+        user="",
+        password='',
     ),
     'postgres-ext': "postgresqlext://{user}:{password}@{host}:{port}/{database}".format(
         database='test_ext',
         port=5432,
         host='127.0.0.1',
-        user='huangsizhe',#postgres
-        password='',#hsz881224
+        user="",
+        password='',
     ),
     'postgres-pool': "postgresql+pool://{user}:{password}@{host}:{port}/{database}?max_connections={max_connections}".format(
         database='test_pool',
         port=5432,
         host='127.0.0.1',
-        user='huangsizhe',#postgres
-        password='',#hsz881224
+        user="",
+        password='',
         max_connections=20
     ),
     'postgres-pool-ext': "postgresqlext+pool://{user}:{password}@{host}:{port}/{database}?max_connections={max_connections}".format(
         database='test_ext_pool',
         port=5432,
         host='127.0.0.1',
-        user='huangsizhe',#postgres
-        password='',#hsz881224
+        user="",
+        password='',
         max_connections=20
     ),
     'mysql': "mysql://{user}:{password}@{host}:{port}/{database}".format(
         database='test_sql',
         port=3306,
         host='127.0.0.1',
-        user='root',
-        password='hsz881224'
+        user="",
+        password=""
     ),
     'mysql-pool': "mysql+pool://{user}:{password}@{host}:{port}/{database}?max_connections={max_connections}".format(
         database='test_pool',
         port=3306,
         host='127.0.0.1',
-        user='root',
-        password='hsz881224',
+        user="",
+        password="",
         max_connections=20
     )
 }
