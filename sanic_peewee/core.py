@@ -4,8 +4,8 @@
 @Author: Huang Sizhe
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   huangsizhe
-@Last modified time: 07-Apr-2017
+@Last modified by:   Huang Sizhe
+@Last modified time: 08-Apr-2017
 @License: MIT
 @Description:
 """
@@ -26,7 +26,7 @@ class Core:
     """核心类,作为Peewee的父类,主要是管数据库连接,与sainc对象绑定,以及生成model父类
     """
 
-    def _database(self, DBURL=None):
+    def _database(self, DBURL:string=None):
         """
         _database用于创建数据库的async连接
 

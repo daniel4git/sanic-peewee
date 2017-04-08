@@ -4,7 +4,7 @@
 @Author: Huang Sizhe <huangsizhe>
 @Date:   06-Apr-2017
 @Email:  hsz1273327@gmail.com
-@Last modified by:   huangsizhe
+@Last modified by:   Huang Sizhe
 @Last modified time: 08-Apr-2017
 @License: MIT
 @Description:
@@ -63,6 +63,11 @@ class TestCRUD(unittest.TestCase):
     async def select_alpha(self):
         result = await self.db.aio.select(self.db.SelectQuery(MysqlTestModelAlpha))
         return result
+
+    async def count_alpha(self):
+        result = await self.db.aio.count(MysqlTestModelAlpha.select())
+        return result
+
     async def execute_select_alpha(self):
         result = await self.db.aio.execute(MysqlTestModelAlpha.select())
         return result
@@ -70,7 +75,7 @@ class TestCRUD(unittest.TestCase):
     async def update_alpha(self,old, new):
         await self.db.aio.update(
 
-            self.db.UpdateQuery(MysqlTestModelAlpha, text=new).where(MysqlTestModelAlpha.text == old))
+            self.db.UpdateQuery(MysqlTestModelAlpha, update = {"text":"new").where(MysqlTestModelAlpha.text == old))
         return True
     async def execute_update_alpha(self,old, new):
         await self.db.aio.execute(
@@ -96,29 +101,75 @@ class TestCRUD(unittest.TestCase):
         await self.db.delete(obj)
         return True
 
-    def test_create_select(self):
+    def test_create_select_count(self):
         async def _test():
             rst = await self.create_alphas()
             assert rst,"create error"
             rsts = await self.select_alpha()
             assert set([i.text for i in rsts])== set(["new","123","234"])
-
+            count = await self.count_alpha()
+            assert count == 3
         self.run_with_databases(_test)
+
+    def test_create_select_count_excrute(self):
+        async def _test():
+            rst = await self.create_alphas()
+            assert rst,"create error"
+            rsts = await self.execute_select_alpha()
+            assert set([i.text for i in rsts])== set(["new","123","234"])
+            count = await self.count_alpha()
+            assert count == 3
+        self.run_with_databases(_test)
+
     def test_insert_get_delete(self):
         async def _test():
             await self.create_alpha("get")
             rst = await self.get_alpha("get")
             assert rst.text == "get"
             await self.delete_alpha("get")
+        self.run_with_databases(_test)
 
+    def test_insert_get_delete_excute(self):
+        async def _test():
+            await self.create_alpha("get")
+            rst = await self.get_alpha("get")
+            assert rst.text == "get"
+            await self.executedelete_alpha("get")
+        self.run_with_databases(_test)
+
+    def test_insert_get_delete_object(self):
+        async def _test():
+            await self.create_alpha("get")
+            rst = await self.get_alpha("get")
+            assert rst.text == "get"
+            await self.object_delete_alpha("get")
         self.run_with_databases(_test)
 
     def test_update(self):
         async def _test():
             await self.create_alpha("update")
             rst1 = await self.get_alpha("update")
+            await self.update_alpha("update","updated")
+            rst2 = await self.get_alpha("updated")
+            assert rst1.id ==rst2.id
+            await self.delete_alpha("updated")
+        self.run_with_databases(_test)
+
+    def test_update_execute(self):
+        async def _test():
+            await self.create_alpha("update")
+            rst1 = await self.get_alpha("update")
             await self.execute_update_alpha("update","updated")
-            #await self.update_alpha("update","updated")
+            rst2 = await self.get_alpha("updated")
+            assert rst1.id ==rst2.id
+            await self.delete_alpha("updated")
+        self.run_with_databases(_test)
+
+    def test_update_object(self):
+        async def _test():
+            await self.create_alpha("update")
+            rst1 = await self.get_alpha("update")
+            await self.object_update_alpha("update","updated")
             rst2 = await self.get_alpha("updated")
             assert rst1.id ==rst2.id
             await self.delete_alpha("updated")
