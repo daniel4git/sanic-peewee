@@ -62,7 +62,7 @@ python3 -m unittest discover -v -s ./tests
 
 ```shell
 coverage3 run --source=sanic_peewee  -m unittest discover -v -s ./tests
-coverage3 html -d coverage_html
+coverage3 html -d htmlcov
 ```
 
 ## 例子 Example
