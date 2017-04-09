@@ -124,7 +124,7 @@ long_description = '''# sanic-peewee
     '''
 setup(
     name='sanic-peewee',
-    version='0.0.5',
+    version='1.0.0',
     author='Huang Sizhe',
     author_email='hsz1273327@gmail.com',
     packages=['sanic_peewee'],
@@ -132,4 +132,5 @@ setup(
     description='a simple sanic extension for using async-peewee',
     long_description=long_description,
     install_requires=required,
+    url="https://github.com/Sanic-Extensions/sanic-peewee"
 )
