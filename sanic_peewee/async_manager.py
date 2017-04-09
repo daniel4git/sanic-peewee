@@ -6,7 +6,7 @@
 @Email:  hsz1273327@gmail.com
 # @Last modified by:   Huang Sizhe
 # @Last modified time: 08-Apr-2017
-@License: MIT
+@License: Apache License Version 2.0
 """
 __all__ = ["AsyncManager"]
 

@@ -6,7 +6,7 @@
 @Email:  hsz1273327@gmail.com
 # @Last modified by:   Huang Sizhe
 # @Last modified time: 08-Apr-2017
-@License: MIT
+@License: Apache License Version 2.0
 @Description:
 """
 
@@ -128,7 +128,7 @@ setup(
     author='Huang Sizhe',
     author_email='hsz1273327@gmail.com',
     packages=['sanic_peewee'],
-    license='BSD',
+    license='Apache License Version 2.0',
     description='a simple sanic extension for using async-peewee',
     long_description=long_description,
     install_requires=required,

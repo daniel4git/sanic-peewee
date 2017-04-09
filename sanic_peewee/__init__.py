@@ -2,7 +2,7 @@
 @Author: Huang Sizhe
 @Date:   01-Apr-2017
 @Email:  hsz1273327@gmail.com
-@License: MIT
+@License: Apache License Version 2.0
 """
 __all__ = ["select", "prefetch", "scalar", "atomic", "savepoint", "transaction", "count",
            "create", "delete", "get", "insert", "update", "Peewee"]
