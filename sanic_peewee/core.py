@@ -22,28 +22,28 @@ from playhouse.db_url import parse
 
 
 class Core:
-    """核心类,作为Peewee的父类,主要是管数据库连接,与sainc对象绑定,以及生成model父类
+    """
     """
 
     def _database(self, DBURL=None):
         """
-        _database用于创建数据库的async连接
+        _database is used to create a async connection with db.
 
         Parameters:
         DBURL (str): - batabase url
 
         Return:
-            object: - 不同数据库连接的对象
+            object: - db connection object
 
 
 
-        dburl例子如下:
-        postgresql://user:password@ip:port/dbname
-        mysql://user:passwd@ip:port/dbname
-        mysql+pool://user:passwd@ip:port/dbname?max_connections=20
-        postgresql+pool://user:passwd@ip:port/dbname?max_connections=20
-        postgresqlext://user:passwd@ip:port/dbname
-        postgresqlext+pool://user:passwd@ip:port/dbname?max_connections=20
+        dburl's example:
+            postgresql://user:password@ip:port/dbname
+            mysql://user:passwd@ip:port/dbname
+            mysql+pool://user:passwd@ip:port/dbname?max_connections=20
+            postgresql+pool://user:passwd@ip:port/dbname?max_connections=20
+            postgresqlext://user:passwd@ip:port/dbname
+            postgresqlext+pool://user:passwd@ip:port/dbname?max_connections=20
         """
         TYPES = {
             "postgresql": PostgresqlDatabase,
@@ -74,16 +74,13 @@ class Core:
             raise AttributeError("need a sanic app to init the extension")
 
     def __init__(self, DBURL=None):
-        """根据参数选择生成db,参数为dburl的形式
-
-        """
         if DBURL:
             self.db = self._database(DBURL)
         else:
             self.db = None
 
     def init_app(self, app):
-        """绑定app
+        """bind the app
         """
         if not self.db:
             if app.config.DB_URL:
@@ -105,6 +102,7 @@ class Core:
         db = self.db
 
         class _BlockedMeta(BaseModel):
+
             def __new__(cls, name, bases, attrs):
                 _instance = super(_BlockedMeta, cls).__new__(
                     cls, name, bases, attrs)
@@ -112,6 +110,7 @@ class Core:
                 return _instance
 
         class AsyncBase(Model, metaclass=_BlockedMeta):
+
             def to_dict(self):
                 return self._data
 
